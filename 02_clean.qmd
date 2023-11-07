@@ -14,13 +14,29 @@ library(table1)
 Clean data
 
 ```{r}
-
+#copy paste
 rhc_clean <- rhc_data |> 
   bind_cols() |> 
   as_tibble() 
 
-rhc_clean |> mutate()
-
+# convert death sting to binary: 1 = dead 0 = alive
+rhc_clean |> mutate(death = case_when(
+  death == "No" ~ 0,
+  death == "Yes" ~ 1))
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
