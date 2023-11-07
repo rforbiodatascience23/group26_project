@@ -1,3 +1,15 @@
+Load packages
+```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(table1)
+```
+
 
 Clean data
 
@@ -7,7 +19,7 @@ rhc_clean <- rhc_data |>
   bind_cols() |> 
   as_tibble() 
 
-rhc_clean
+rhc_clean |> mutate()
 
 
 ```
