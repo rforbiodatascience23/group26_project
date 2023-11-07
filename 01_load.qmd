@@ -1,0 +1,24 @@
+# Load packages
+```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(table1)
+```
+
+
+```{r}
+# Create the data directory programmatically
+dir.create(path="data")
+
+# Retrieve the data directly (rhc = right hear catherization)
+rhc_data <- read_csv(file = "https://hbiostat.org/data/repo/rhc.csv")
+
+# Write the data to disk
+write_csv(x = rhc_data,
+          file = "data/rhc.csv")
+```
