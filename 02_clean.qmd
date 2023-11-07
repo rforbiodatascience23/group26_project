@@ -1,0 +1,14 @@
+
+Clean data
+
+```{r}
+
+rhc_clean <- rhc_data |> 
+  bind_cols() |> 
+  as_tibble() 
+
+rhc_clean
+
+
+```
+
