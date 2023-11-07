@@ -25,8 +25,42 @@ rhc_clean |> mutate(death = case_when(
   death == "Yes" ~ 1))
 
 ```
+Load packages
+```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(table1)
+```
 
 
+Clean data
+
+```{r}
+#copy paste
+rhc_clean <- rhc_data |> 
+  bind_cols() |> 
+  as_tibble() 
+
+# convert death string to binary: 1 = dead 0 = alive
+rhc_clean <- rhc_clean |> 
+  mutate(death = case_when(
+  death == "No" ~ 0,
+  death == "Yes" ~ 1))
+
+#round age to the nearest whole number
+rhc_clean <- rhc_clean |> mutate("age" = round(age, 0)) 
+
+
+## Delete all attributes when we know which ones we do not use
+
+# Write the data to disk
+write_csv(x = rhc_clean,
+          file = "data/rhc_clean.csv.gz")
 
 
 
