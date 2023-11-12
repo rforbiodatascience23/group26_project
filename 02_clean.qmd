@@ -26,7 +26,10 @@ rhc_clean <- rhc_clean |>
   death == "Yes" ~ 1))
 
 #round age to the nearest whole number
-rhc_clean <- rhc_clean |> mutate("age" = round(age, 0)) 
+rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |> 
+                          mutate(age = round(age, 0),
+                                 weight = round(weight, 0),
+                                 edu = round(edu, 0)) 
 
 #change Ptid to ID and move to first spot
 rhc_clean <- rhc_clean |> 
@@ -38,6 +41,7 @@ colnames(rhc_clean) <- str_replace_all(colnames(rhc_clean), "1", "") |> str_repl
 #select(-c("cat1"))
 
 rhc_clean
+
 
           
 
