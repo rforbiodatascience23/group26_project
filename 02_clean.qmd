@@ -52,7 +52,7 @@ rhc_clean
 ```{r}
 # Write the data to disk
 write_csv(x = rhc_clean,
-          file = "data/rhc_clean.csv.gz")
+          file = "data/rhc_clean.csv")
 
 ```
 
@@ -71,14 +71,9 @@ write_csv(x = rhc_clean,
 ```
 
 
-```{r}
-```
 
 
-```{r}
-```
 
 
-```{r}
-```
+
 
