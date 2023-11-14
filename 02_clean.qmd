@@ -60,7 +60,6 @@ write_csv(x = rhc_clean,
 #what do we do about date of last contact when looking at dead vs live
 
 #Delete all attributes when we know which ones we do not use
-
 ```
 
 
