@@ -1,0 +1,29 @@
+
+
+
+```{r}
+
+rhc_clean
+
+
+```
+
+How many people had cancer?
+
+
+```{r}
+
+rhc_clean |> 
+  count(ca,sex)
+
+
+```
+
+hello
+
+
+
+
+
+
+
