@@ -35,10 +35,6 @@ rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |>
 rhc_clean <- rhc_clean |> 
   rename(ID = "ptid") |> relocate("ID")
 
-# Modify the column names to remove "1" and "hx"
-colnames(rhc_clean) <- str_replace_all(colnames(rhc_clean),"1", "") |> 
-                       str_replace_all("hx", "")
-
 #select(-"cat1")
 
 rhc_clean
