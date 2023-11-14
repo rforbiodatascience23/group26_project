@@ -1,0 +1,68 @@
+```{r}
+library(ggplot2)
+library(table1)
+```
+Table1
+```{r}
+
+rhc_clean |> mutate(sex = factor(sex),
+                    swang1 = factor(swang1),
+                    death = factor(death)) |> 
+  table1(x = formula(~ sex + age + race + swang1| death),
+         data = _)
+
+
+```
+
+
+
+meta_data  |> drop_na(Gender) |> count(Gender, Cohort) |> 
+  ggplot(aes(x = Cohort, y = n,
+             fill = Gender)) +
+  geom_col(position= position_dodge(preserve = "single"),
+           alpha = 0.5,
+           color="black") +
+  labs(x = 'Cohort',
+       
+       y = 'n') +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
+  
+
+```{r}
+
+subHX <- rhc_clean |> select(ends_with("hx"))
+subHX |> count(chfhx)
+
+  
+subHX |> pivot_longer(everything(),
+                      names_to = "names",
+                      values_to = "values") 
+
+
+gravier_clean_aug_long <- gravier_clean_aug |> 
+    pivot_longer(cols = !early_metastasis,
+                names_to = "gene",
+                values_to = "log2_expr_level")
+
+
+
+subHX |>
+  ggplot(aes(x = chfhx)) +
+  geom_bar()
+subHX |>
+  count(chfhx)
+# B
+subHX |>
+  count(chfhx) |>
+  ggplot(aes(x = chfhx, y = n)) +
+  geom_col()
+
+rhc_clean |> View()
+```
+
+What diseases lead to getting RHC
+
+What diseases lead to death even when getting RHC
+
+What 
