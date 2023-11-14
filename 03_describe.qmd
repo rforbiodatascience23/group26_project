@@ -1,7 +1,36 @@
 ## Description of the data
+# Load packages
+```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(dplyr)
+library(table1)
+```
+Here we will describe the dataset:
 
-Here we will describe the dataset
+- PCA on dataset of all the variables we chose to include to find what variables actually influence the decition of introducitn catherization
+- divide into two catagories, soscioeconomic factors and physical factors: Find when a patient recieves RHC based on different diseases. Find how well the treatment works in terms based on death rate. Does income, edu, insurance, race, (sex?), influence when a patient actually recieves the treatment?
 
+
+- cat1 and cat2 are primary and secondary disease category
+```{r}
+rhc_data |> group_by(cat1,cat2) |> summarise(n = n())
+```
+
+
+
+```{r}
+rhc_data |> select(ends_with("hx")) |> summarise(n =n())
+```
+ 
+
+
+  
 
 
 
