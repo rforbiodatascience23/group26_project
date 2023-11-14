@@ -11,9 +11,7 @@ T1 <- rhc_clean |> mutate(sex = factor(sex),
                     death = factor(death)) |> 
   table1(x = formula(~ sex + age + race + swang1 | death),
          data = _)
-
-T2 <- rhc_clean |> table1(x = formula(~ sex + age + race + swang1 | death),
-         data = _)
+T1
 
 ```
 
@@ -53,10 +51,19 @@ subHX |> mutate(values = factor(values)) |>
 ```
 
 
+Scatterplot of diseases vs getting RHC
 ```{r}
+rhc_clean
+rhc_clean |> pivot_longer(ends_with("hx"),
+                      names_to = "variables",
+                      values_to = "values") |> 
+  ggplot(aes(x = variables, y = swang1, color = values)) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1)) +
+  geom_point()
+
+
 
 ```
-
 
 
 What diseases lead to getting RHC
