@@ -13,32 +13,44 @@ rhc_clean |> mutate(sex = factor(sex),
 
 
 ```
-
-
-
-meta_data  |> drop_na(Gender) |> count(Gender, Cohort) |> 
-  ggplot(aes(x = Cohort, y = n,
-             fill = Gender)) +
-  geom_col(position= position_dodge(preserve = "single"),
-           alpha = 0.5,
-           color="black") +
-  labs(x = 'Cohort',
-       
+```{r}
+rhc_clean |> count(death, swang1) |> 
+  ggplot(aes(x = swang1, y = n, fill = death))+
+  geom_col(alpha = 1,
+           color="pink") +
+  labs(x = 'swang',
        y = 'n') +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
+```
+
 
   
 
 ```{r}
 
 subHX <- rhc_clean |> select(ends_with("hx"))
-subHX |> count(chfhx)
-
+subHX <- subHX |> left_join(rhc_clean, join_by("death"))
   
-subHX |> pivot_longer(everything(),
-                      names_to = "names",
+subHX <- subHX |> pivot_longer(everything(),
+                      names_to = "variables",
                       values_to = "values") 
+ggplot(data = subHX, 
+       mapping = aes( x = variables,
+                      y = values)) + 
+      geom_boxplot() 
 
+
+library(tidyverse)
+
+subHX |> 
+  group_by(names, values) |> 
+  summarise(count = n()) |> 
+  pivot_wider(names_from = value, values_from = count, names_prefix = "count_")
+
+
+rhc_clean |> View()
+```
+```{r}
 
 gravier_clean_aug_long <- gravier_clean_aug |> 
     pivot_longer(cols = !early_metastasis,
@@ -57,8 +69,6 @@ subHX |>
   count(chfhx) |>
   ggplot(aes(x = chfhx, y = n)) +
   geom_col()
-
-rhc_clean |> View()
 ```
 
 What diseases lead to getting RHC
