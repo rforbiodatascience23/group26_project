@@ -1,15 +1,10 @@
-
-
-
 ```{r}
 
-rhc_clean
-
-
+library(tidyverse)
+library(broom)
 ```
 
 How many people had cancer?
-
 
 ```{r}
 
@@ -19,11 +14,38 @@ rhc_clean |>
 
 ```
 
-hello
+```{r}
+rhc_clean
 
 
 
+```
+
+## PCA analysis
+
+```{r}
+
+pca_fit <- rhc_clean |> 
+  select(where(is.numeric)) |>
+  select(!"ptID") |> 
+  select(age,death,edu,cardiohx,chfhx) |> 
+  prcomp(scale = TRUE)
 
 
 
+pca_fit
+  
 
+
+
+```
+
+```{r}
+pca_fit |> 
+  augment(rhc_clean) %>% # add original dataset back in
+  ggplot(aes(.fittedPC1, .fittedPC2, color = death)) + 
+  geom_point(size = 1.5) +
+  scale_color_manual(
+    values = c("1" = "#D55E00", "0" = "#0072B2")
+  )
+```

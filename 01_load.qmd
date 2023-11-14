@@ -14,7 +14,7 @@ library(table1)
 
 ```{r}
 # Create the data directory programmatically
-dir.create(path="data")
+#dir.create(path="data")
 
 # _raw data folder, filename, and original data location
 raw_dir <- "data/_raw/"
@@ -35,7 +35,7 @@ rhc_data <- read_csv(file = str_c(raw_dir, data_file))
 
 print(str_c(raw_dir,data_file))
 
-# Write the data to data folder.
+# Write the data to data folder
 write_csv(x = rhc_data,
           file = "data/rhc.csv")
 ```
