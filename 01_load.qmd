@@ -16,10 +16,26 @@ library(table1)
 # Create the data directory programmatically
 dir.create(path="data")
 
-# Retrieve the data directly (rhc = right hear catherization)
-rhc_data <- read_csv(file = "https://hbiostat.org/data/repo/rhc.csv")
+# _raw data folder, filename, and original data location
+raw_dir <- "data/_raw/"
+data_file <- "rhc.csv"
+data_loc <- "https://hbiostat.org/data/repo/"
 
-# Write the data to disk
+
+# Checking if file exist in folder
+if( !dir.exists(raw_dir) ){
+  dir.create(path = raw_dir)
+}
+if( !file.exists(str_c(raw_dir, data_file)) ){
+  download.file(
+    url = str_c(data_loc, data_file),
+    destfile = str_c(raw_dir, data_file))
+}
+rhc_data <- read_csv(file = str_c(raw_dir, data_file))
+
+print(str_c(raw_dir,data_file))
+
+# Write the data to data folder
 write_csv(x = rhc_data,
           file = "data/rhc.csv")
 ```
