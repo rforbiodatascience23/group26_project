@@ -35,7 +35,7 @@ rhc_data <- read_csv(file = str_c(raw_dir, data_file))
 
 print(str_c(raw_dir,data_file))
 
-# Write the data to data folder.
+# Write the data to data folder
 write_csv(x = rhc_data,
           file = "data/rhc.csv")
 ```
