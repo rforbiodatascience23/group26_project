@@ -33,7 +33,9 @@ rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |>
 
 #change Ptid to ID and move to first spot
 rhc_clean <- rhc_clean |> 
-  rename(ID = "ptid") |> relocate("ID")
+                select(-ptid) |> 
+                rename(ptID= "...1")
+  
 
 #select(-"cat1")
 
