@@ -1,5 +1,25 @@
 Plots
 
 ```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(dplyr)
+library(table1)
+```
 
+```{r}
+rhc_clean
+```
+
+```{r}
+rhc_clean |>
+  select(ptID,cardiohx:amihx) |> 
+  pivot_longer(rhc_clean)
+  
+  
 ```
