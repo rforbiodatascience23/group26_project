@@ -33,12 +33,11 @@ rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |>
                                  temp1 = round(temp1, 1),
                                  ph1 = round(ph1, 2))
 
-#change Ptid to ID and move to first spot
+#Remove old ptid and create new ID's
 rhc_clean <- rhc_clean |> 
                 select(-ptid) |> 
                 rename(ptID= "...1")
   
-
 rhc_clean
 
           
