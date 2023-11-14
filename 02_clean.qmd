@@ -29,13 +29,13 @@ rhc_clean <- rhc_clean |>
 rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |> 
                           mutate(age = round(age, 0),
                                  weight = round(weight, 0),
-                                 edu = round(edu, 0)) 
+                                 edu = round(edu, 0),
+                                 temp1 = round(temp1, 1),
+                                 ph1 = round(ph1, 2))
 
 #change Ptid to ID and move to first spot
 rhc_clean <- rhc_clean |> 
   rename(ID = "ptid") |> relocate("ID")
-
-#select(-"cat1")
 
 rhc_clean
 
