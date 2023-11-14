@@ -2,17 +2,22 @@
 library(ggplot2)
 library(table1)
 ```
+
 Table1
 ```{r}
 
-rhc_clean |> mutate(sex = factor(sex),
+T1 <- rhc_clean |> mutate(sex = factor(sex),
                     swang1 = factor(swang1),
                     death = factor(death)) |> 
-  table1(x = formula(~ sex + age + race + swang1| death),
+  table1(x = formula(~ sex + age + race + swang1 | death),
          data = _)
 
+T2 <- rhc_clean |> table1(x = formula(~ sex + age + race + swang1 | death),
+         data = _)
 
 ```
+
+This can be used to plot all individual variables to compare the variable with how many people died
 ```{r}
 rhc_clean |> count(death, swang1) |> 
   ggplot(aes(x = swang1, y = n, fill = death))+
@@ -25,51 +30,34 @@ rhc_clean |> count(death, swang1) |>
 
 
   
-
+This can be used to plot one individual disease and see how many peole has the disease 
 ```{r}
+rhc_clean |> ggplot(aes(x = dementhx)) + geom_bar(alpha = 0.6, color = "black") + 
+                  labs(x = 'dementhx', y = 'counts')
 
+```
+
+This is to see all the diseases and how many people have it =1 or dont = 0
+```{r}
 subHX <- rhc_clean |> select(ends_with("hx"))
-subHX <- subHX |> left_join(rhc_clean, join_by("death"))
-  
+
 subHX <- subHX |> pivot_longer(everything(),
                       names_to = "variables",
-                      values_to = "values") 
-ggplot(data = subHX, 
-       mapping = aes( x = variables,
-                      y = values)) + 
-      geom_boxplot() 
+                      values_to = "values")
 
+subHX |> mutate(values = factor(values)) |> 
+  ggplot(aes(x = variables, fill = values)) +
+  theme(axis.text.x = element_text(angle = 20, hjust = 1)) +
+  geom_bar(position = "dodge")
 
-library(tidyverse)
-
-subHX |> 
-  group_by(names, values) |> 
-  summarise(count = n()) |> 
-  pivot_wider(names_from = value, values_from = count, names_prefix = "count_")
-
-
-rhc_clean |> View()
 ```
+
+
 ```{r}
 
-gravier_clean_aug_long <- gravier_clean_aug |> 
-    pivot_longer(cols = !early_metastasis,
-                names_to = "gene",
-                values_to = "log2_expr_level")
-
-
-
-subHX |>
-  ggplot(aes(x = chfhx)) +
-  geom_bar()
-subHX |>
-  count(chfhx)
-# B
-subHX |>
-  count(chfhx) |>
-  ggplot(aes(x = chfhx, y = n)) +
-  geom_col()
 ```
+
+
 
 What diseases lead to getting RHC
 
