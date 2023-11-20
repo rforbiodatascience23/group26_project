@@ -31,3 +31,17 @@ rhc_clean |>
   scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
+
+```{r}
+rhc_clean |>
+  rowwise() |> 
+  mutate(comorbidities=sum(c_across(cardiohx:amihx))) |> 
+  ggplot(aes(x = comorbidities, fill=factor(death))) +
+  facet_wrap(~swang1)+
+  geom_bar(position = "stack") +
+  labs(title = "Risk of dying by number of comorbidities",
+       x = "Number of comorbidities",
+       y = "Number of patients") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+```
