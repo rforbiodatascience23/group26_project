@@ -16,10 +16,18 @@ library(table1)
 rhc_clean
 ```
 
+Does the number of comorbidity diseases influence the risk of death?
+
 ```{r}
 rhc_clean |>
-  select(ptID,cardiohx:amihx) |> 
-  pivot_longer(rhc_clean)
+  rowwise() |> 
+  mutate(comorbidities=sum(c_across(cardiohx:amihx))) |> 
   
-  
+  ggplot(aes(x = comorbidities, fill=factor(death))) +
+  geom_bar(position = "stack") +
+  labs(title = "Risk of dying by number of comorbidities",
+       x = "Number of comorbidities",
+       y = "Number of patients") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
 ```
