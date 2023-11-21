@@ -1,0 +1,197 @@
+---
+title: "Group 26 - "
+author: 
+- "Sahand Yazdani - s203538"
+format:
+  html: 
+    embed-resources: true
+execute: 
+  message: false
+  warning: false
+---
+
+```{r}
+# Creating a generel function that can be used for yes and no columns
+create_binary_column <- function(x) {
+  ifelse(x == "Yes", 1, 
+  ifelse(x == "No", 0, x))
+}
+
+convert_RHC <- function(df) {
+  df %>%
+    mutate(swang1 = case_when(
+      swang1 == "No RHC" ~ 0,
+      swang1 == "RHC" ~ 1
+    ))
+}
+
+
+```
+
+
+
+```{r}
+rhc_clean |> 
+  ggplot(aes(x = age, y = sex, color = death)) +
+  geom_point()
+```
+
+```{r}
+# Assuming 'Cardiohx' is a binary indicator for cardiovascular comorbidity
+rhc_clean %>%
+  group_by(cardiohx) %>%
+  summarise(survival_rate = mean(death)) %>%
+  ggplot(aes(x = factor(cardiohx), 
+             y = survival_rate, 
+             fill = factor(cardiohx))) +
+  geom_bar(stat = "identity") +
+  labs(title = "Survival Rate by severe Cardiovascular Comorbidity",
+       x = "Cardiovascular Comorbidity", 
+       y = "Survival Rate") +
+  guides(fill = guide_legend(title = "Disease Status"))
+
+```
+#### Plot of blood pressure across all diagnosis, because one which is 
+```{r}
+rhc_clean |> 
+  select(meanbp1, 
+         resp:ortho) |> 
+  mutate(across(resp:ortho, 
+                ~create_binary_column(.))) |> 
+  pivot_longer(cols = resp:ortho,
+               names_to = "Diagnosis",
+               values_to = "Values") |> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(Values))) +
+  geom_point(aes(color = factor(Values)), 
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(color = "black", 
+               alpha = 0.5) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure") +
+  guides(fill = guide_legend(title = "Disease Status"))
+  
+
+
+rhc_clean |> 
+  select(meanbp1, 
+         resp:ortho,
+         swang1) |> 
+  mutate(across(resp:ortho, 
+                ~create_binary_column(.))) |>
+  mutate(swang1 = case_when(
+         swang1 == "No RHC" ~ 0,
+         swang1 == "RHC" ~ 1)) |> 
+  pivot_longer(cols = resp:ortho,
+               names_to = "Diagnosis",
+               values_to = "Values") |> 
+  filter(Values == 1) |> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(Values))) +
+  geom_point(aes(color = as.factor(swang1)),
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure",
+       color = "RHC") +
+  guides(fill = guide_legend(title = "Disease Status",
+         color = guide_legend(title = "RHC"))) +
+  scale_fill_manual(values = c("1" = "#F8766D", "0" = "#619CFF"), labels = c("1" = "Yes", "0" = "No")) +
+  scale_color_manual(values = c("1" = "#F8766D", "0" = "#619CFF"), labels = c("1" = "Yes", "0" = "No"))
+
+
+rhc_clean |> 
+  select(meanbp1, 
+         resp:ortho,
+         swang1) |> 
+  mutate(across(resp:ortho, 
+                ~create_binary_column(.))) |>
+  mutate(swang1 = case_when(
+         swang1 == "No RHC" ~ 0,
+         swang1 == "RHC" ~ 1)) |> 
+  pivot_longer(cols = resp:ortho,
+               names_to = "Diagnosis",
+               values_to = "Values") |> 
+  filter(Values == 1) |> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(swang1))) +
+  geom_point(aes(color = as.factor(swang1)),
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(alpha = 0.5, 
+               outlier.shape = NA) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure",
+       color = "RHC") +
+  guides(fill = guide_legend(title = "Disease Status",
+         color = guide_legend(title = "RHC"))) +
+  scale_fill_manual(values = c("1" = "#F8766D", "0" = "#619CFF"), labels = c("1" = "Yes", "0" = "No")) +
+  scale_color_manual(values = c("1" = "#F8766D", "0" = "#619CFF"), labels = c("1" = "Yes", "0" = "No"))
+```
+
+
+```{r}
+rhc_clean |> 
+  select(meanbp1, 
+         cat1,
+         swang1) |>
+  convert_RHC() |> 
+  rename(RHC_status = swang1) |> 
+  ggplot(aes(x = cat1, 
+             y = meanbp1,
+             fill = factor(RHC_status))) +
+  geom_point(aes(color = cat1),
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  #geom_violin(alpha = 0.35, outlier.shape = NA) +
+  geom_boxplot(alpha = 0.35, outlier.shape = NA) +
+  labs(title = "Mean blood pressure across all primary diseases",
+       x = "Primary disease category",
+       y = "Mean blood pressure",
+       color = "Primary Disease Category") +
+  guides(fill = guide_legend(title = "RHC")) +
+  theme(axis.text.x = element_text(angle = 17,
+                                   hjust = 1,
+                                   vjust = 1))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
