@@ -1,0 +1,31 @@
+---
+title: "Group 26 - Assignment 5"
+author: 
+- "Carl Felix Freiesleben - s203521"
+- "Emilie Munk - s203538"
+- "Josefine Løken - s183784"
+- "Judith Tierno Martí - s222869"
+- "Sahand Yazdani - s203538"
+format:
+  html: 
+    embed-resources: true
+execute: 
+  message: false
+  warning: false
+---
+
+### Load Data
+{{< include 01_load.qmd >}}
+### Clean Data
+{{< include 02_clean.qmd >}}
+### Augment Data
+
+### Description
+
+### Analysis 1
+{{< include s203538.qmd >}}
+### Analysis 2
+### Analysis 3
+### Analysis 4
+### Analysis 5
+### Analysis 6
