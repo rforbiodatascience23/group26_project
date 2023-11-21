@@ -42,6 +42,10 @@ rhc_clean |>
   labs(title = "Risk of dying by number of comorbidities",
        x = "Number of comorbidities",
        y = "Number of patients") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name= "Survival", values = c("0" = "blue", "1" = "red"), labels= c('Dead', 'Alive')) +
   theme_minimal()
+```
+
+```{r}
+
 ```
