@@ -19,9 +19,9 @@ rhc_clean |>
   ggplot(aes(x = sex, 
              fill=factor(death))) +
   geom_bar() +
-  labs(title = "",
-       x = "",
-       y = "") +
+  labs(title = "Death females vs. males",
+       x = "Gender",
+       y = "Number of patients") +
   #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 
@@ -33,9 +33,9 @@ rhc_clean |>
   ggplot(aes(x = age, 
              fill=factor(death))) +
   geom_bar() +
-  labs(title = "",
-       x = "",
-       y = "") +
+  labs(title = "Death in different ages",
+       x = "Age",
+       y = "Number of patients") +
   #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 
