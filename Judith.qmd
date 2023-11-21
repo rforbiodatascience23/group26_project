@@ -1,0 +1,43 @@
+# Libraries
+```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(dplyr)
+library(table1)
+```
+
+```{r}
+rhc_clean
+```
+```{r}
+rhc_clean |>
+  ggplot(aes(x = sex, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "",
+       x = "",
+       y = "") +
+  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+
+
+
+```
+```{r}
+rhc_clean |>
+  ggplot(aes(x = age, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "",
+       x = "",
+       y = "") +
+  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+
+```
+
