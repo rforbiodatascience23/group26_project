@@ -2,16 +2,18 @@
 
 library(tidyverse)
 library(broom)
+library(purrr)
+library(ggrepel)
 ```
 
 How many people had cancer?
 
 # https://ehsanx.github.io/TMLEworkshop/rhc-data-description.html
 
+Overvej at factorisere alt
+
 ```{r}
 
-rhc_clean |> 
-  count(ca,sex)
 
 
 ```
@@ -32,7 +34,7 @@ rhc_for_pca <- rhc_clean |>
   mutate(swang1 = case_when(
                             swang1 == "RHC" ~ 1,
                             swang1 == "No RHC" ~ 0)) |> 
-  select(where(is.numeric)) |> 
+  select_if(is.numeric) |> 
   select(c(death, swang1,age,edu,meanbp1,resp1,hrt1,crea1,pot1,surv2md1))
 
 pca_fit <- rhc_for_pca |>
@@ -135,17 +137,137 @@ rhc_clean |>
 ```
 
 ```{r}
-rhc_clean |> 
-  mutate(days_survived = )
-```
-
-```{r}
 rhc_clean
 ```
 
 ```{r}
-rhc_clean |> select(sadmdte) |>
-  arrange(sadmdte) |>
-  sample_n(size = 500) |> 
-  print(n = 500)
+library("table1") # <= Yes, this should normally go at the beginning!
+rhc_clean |>
+  mutate(Gender = factor(swang1),
+         Cohort = factor(cat1)) |>
+  table1(x = formula(~ sex + age | cat1),
+         data = _)
+```
+
+```{r}
+rhc_clean |>
+  mutate(ca = factor(ca)) |> 
+  count(ca)
+  
+```
+
+```{r}
+
+model = rhc_clean |> 
+  lm(surv2md1 ~ death, data = _)
+
+model
+
+```
+
+```{r}
+rhc_clean |> 
+  mutate(swang1 = case_when(
+                            swang1 == "RHC" ~ 1,
+                            swang1 == "No RHC" ~ 0)) |>
+  group_by(death) |> 
+  summarise(mean(aps1),mean(swang1))
+
+model |> summary()
+
+
+
+```
+
+```{r}
+rhc_clean_long <- rhc_clean |> 
+  mutate(swang1 = case_when(
+                            swang1 == "RHC" ~ 1,
+                            swang1 == "No RHC" ~ 0)) |> 
+  select_if(is.numeric) |>
+  select(!sadmdte,!dschdte)
+  select_if(~ !any(is.na(.))) |> 
+    pivot_longer(cols = !death,
+                names_to = "attribute",
+                values_to = "value")
+rhc_clean_long
+
+
+```
+
+```{r}
+rhc_clean_long_nested <- rhc_clean_long |>
+  group_by(attribute) |>
+  nest() |> 
+  ungroup()
+
+rhc_clean_long_nested
+```
+
+```{r}
+rhc_clean_long_nested <- rhc_clean_long_nested |> 
+  group_by(attribute) |>
+  mutate(model_object = map(.x = data,
+      .f = ~lm(formula = value ~ death,
+               data = .x)))
+```
+
+```{r}
+rhc_clean_long_nested
+```
+
+```{r}
+rhc_clean_long_nested <- rhc_clean_long_nested |>
+  group_by(attribute)|> 
+  mutate(model_object_tidy = 
+           map(.x = model_object,
+               .f = ~tidy(
+                 conf.int = TRUE,
+                 conf.level = 0.95,
+                 x = .x)))
+```
+
+```{r}
+rhc_clean_long_nested |>
+  filter(attribute == "swang1") |> # Replace "g2E09" with whatever was YOUR favourite gene!
+  pull(model_object_tidy)
+```
+
+```{r}
+rhc_estimates <- rhc_clean_long_nested |> 
+  unnest(cols = model_object_tidy)
+rhc_estimates
+```
+
+```{r}
+rhc_estimates <- rhc_estimates |>
+  filter(term == "death") |> 
+  select(c(attribute, p.value, estimate, conf.low, conf.high)) |> 
+  ungroup()
+
+rhc_estimates
+```
+
+```{r}
+rhc_estimates <- rhc_estimates |>
+  mutate(q.variable = p.adjust(p.value)) |> 
+  mutate(is_signifcant =
+           ifelse(
+             p.value <= 0.05,
+             "yes",
+             "no"
+                 ))
+
+rhc_estimates
+```
+
+```{r}
+rhc_estimates |>
+  filter(is_signifcant == "yes") |> 
+  ggplot(mapping = aes(x = estimate, y = fct_reorder(attribute,estimate))) +
+  geom_point() +
+  geom_vline(xintercept = 0) +
+  geom_errorbar(aes(xmax = conf.high, xmin = conf.low)) +
+  labs(title = "Genes Associated with Early Metastasis in Small Node-Negative Breast Carcinoma",
+     x = "Estimates (95%CIs)",y = "", caption = "data from ...")
 ```
