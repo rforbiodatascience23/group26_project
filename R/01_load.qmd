@@ -17,7 +17,7 @@ library(table1)
 #dir.create(path="data")
 
 # _raw data folder, filename, and original data location
-raw_dir <- "data/_raw/"
+raw_dir <- "../data/_raw/"
 data_file <- "rhc.csv"
 data_loc <- "https://hbiostat.org/data/repo/"
 
@@ -37,5 +37,5 @@ print(str_c(raw_dir,data_file))
 
 # Write the data to data folder
 write_csv(x = rhc_data,
-          file = "data/rhc.csv")
+          file = "../data/rhc.csv")
 ```
