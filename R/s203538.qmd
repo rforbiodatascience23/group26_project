@@ -1,14 +1,4 @@
----
-title: "Group 26 - "
-author: 
-- "Sahand Yazdani - s203538"
-format:
-  html: 
-    embed-resources: true
-execute: 
-  message: false
-  warning: false
----
+
 
 ```{r}
 #| label: function-for-words-to-binary
