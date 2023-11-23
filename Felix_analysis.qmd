@@ -184,13 +184,13 @@ rhc_clean_long <- rhc_clean |>
   mutate(swang1 = case_when(
                             swang1 == "RHC" ~ 1,
                             swang1 == "No RHC" ~ 0)) |> 
-  select_if(is.numeric) |>
-  select(!sadmdte,!dschdte)
+  select_if(is.numeric) |> 
+  select(!c(dschdte,sadmdte,ptID,dthdte,lstctdte)) |> 
   select_if(~ !any(is.na(.))) |> 
     pivot_longer(cols = !death,
                 names_to = "attribute",
                 values_to = "value")
-rhc_clean_long
+view(rhc_clean_long)
 
 
 ```
@@ -225,6 +225,7 @@ rhc_clean_long_nested <- rhc_clean_long_nested |>
                  conf.int = TRUE,
                  conf.level = 0.95,
                  x = .x)))
+rhc_clean_long_nested
 ```
 
 ```{r}
@@ -270,4 +271,20 @@ rhc_estimates |>
   geom_errorbar(aes(xmax = conf.high, xmin = conf.low)) +
   labs(title = "Genes Associated with Early Metastasis in Small Node-Negative Breast Carcinoma",
      x = "Estimates (95%CIs)",y = "", caption = "data from ...")
+```
+
+```{r}
+
+2+2
+
+
+```
+
+```{r}
+2+2
+
+```
+
+```{r}
+2+2
 ```
