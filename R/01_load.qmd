@@ -1,5 +1,6 @@
 # Load packages
 ```{r}
+#| message: false 
 library(tidyverse)
 library(base)
 library(patchwork)
