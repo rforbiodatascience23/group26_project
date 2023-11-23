@@ -16,6 +16,9 @@ execute:
 
 ## Load Data
 {{< include 01_load.qmd >}}
+```{r}
+quarto::quarto_render("01_load.qmd", output_format = "html")
+```
 ## Clean Data
 {{< include 02_clean.qmd >}}
 ## Augment Data
