@@ -1,16 +1,3 @@
-# Load packages
-```{r}
-library(tidyverse)
-library(base)
-library(patchwork)
-library(scales)
-library(ggridges)
-library(patchwork)
-library(ggseqlogo)
-library(dplyr)
-library(table1)
-```
-
 ## Clean data
 
 ```{r}
@@ -49,12 +36,13 @@ rhc_clean
 ```{r}
 # Write the data to disk
 write_csv(x = rhc_clean,
-          file = "data/rhc_clean.csv")
+          file = "../data/rhc_clean.csv")
 
 ```
 
 ## Comments
 ```{r}
+#| echo: false
 
 #what do we do about date of last contact when looking at dead vs live
 
