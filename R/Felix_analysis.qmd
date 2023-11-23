@@ -263,12 +263,12 @@ rhc_estimates
 ```
 
 ```{r}
-rhc_estimates |>
-  filter(is_signifcant == "yes") |> 
+rhc_estimates |> 
   ggplot(mapping = aes(x = estimate, y = fct_reorder(attribute,estimate))) +
   geom_point() +
   geom_vline(xintercept = 0) +
   geom_errorbar(aes(xmax = conf.high, xmin = conf.low)) +
+  theme_minimal() +
   labs(title = "Genes Associated with Early Metastasis in Small Node-Negative Breast Carcinoma",
      x = "Estimates (95%CIs)",y = "", caption = "data from ...")
 ```
