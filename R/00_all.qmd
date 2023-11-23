@@ -15,11 +15,7 @@ execute:
 ---
 
 ### Load Data
-source("01_load.qmd")
-```{r}
-source("01_load.qmd")
-```
-
+{{< include 01_load.qmd >}}
 ### Clean Data
 {{< include 02_clean.qmd >}}
 ### Augment Data
