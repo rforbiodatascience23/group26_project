@@ -1,6 +1,7 @@
 ## Clean data
 
 ```{r}
+#| label: Simple-cleaning-chunk-data-wrangling
 #copy paste
 rhc_clean <- rhc_data |> 
   bind_cols() |> 
@@ -34,6 +35,7 @@ rhc_clean
 ## Save data
 
 ```{r}
+#| label: Writing-new-cleaned-csv
 # Write the data to disk
 write_csv(x = rhc_clean,
           file = "../data/rhc_clean.csv")
