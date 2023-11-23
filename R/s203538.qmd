@@ -57,6 +57,7 @@ rhc_clean %>%
 ```{r}
 #| label: meanbp-across-diagnosis-non-filtered
 #| echo: false
+#| output: false
 rhc_clean |> 
   select(meanbp1, 
          resp:ortho) |> 
@@ -113,6 +114,7 @@ rhc_clean |>
 ```{r}
 #| label: meanbp-diagnosis-separated-RHC
 #| echo: false
+#| output: false
 rhc_clean |> 
   select(meanbp1, 
          resp:ortho,

@@ -23,7 +23,9 @@ execute:
 ## Analysis 1
 {{< include s203538.qmd >}}
 ## Analysis 2
+{{< include Felix_analysis.qmd >}}
 ## Analysis 3
+{{< include Emilie.qmd >}}
 ## Analysis 4
 ## Analysis 5
 ## Analysis 6
