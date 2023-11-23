@@ -1,5 +1,6 @@
 # Load packages
 ```{r}
+#| label: Load-libraries
 #| message: false 
 library(tidyverse)
 library(base)
@@ -14,6 +15,8 @@ library(table1)
 
 
 ```{r}
+#| label: Load-file-and-write-file
+#| message: false
 # Create the data directory programmatically
 #dir.create(path="data")
 
