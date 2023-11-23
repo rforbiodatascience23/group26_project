@@ -14,18 +14,16 @@ execute:
   warning: TRUE
 ---
 
-### Load Data
+## Load Data
 {{< include 01_load.qmd >}}
-### Clean Data
+## Clean Data
 {{< include 02_clean.qmd >}}
-### Augment Data
-
-### Description
-
-### Analysis 1
+## Augment Data
+## Description
+## Analysis 1
 {{< include s203538.qmd >}}
-### Analysis 2
-### Analysis 3
-### Analysis 4
-### Analysis 5
-### Analysis 6
+## Analysis 2
+## Analysis 3
+## Analysis 4
+## Analysis 5
+## Analysis 6
