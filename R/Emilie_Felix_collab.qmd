@@ -15,8 +15,8 @@ rhc_clean
 ```
 
 ```{r}
-model = rhc_clean |> 
+model1 = rhc_clean |> 
   lm(aps1 ~ death, data = _)
 
-model
+model1
 ```
