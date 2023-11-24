@@ -4,23 +4,19 @@ format: html
 editor: visual
 ---
 
-## Quarto
+## 
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+The surv2md1is an estimate of the probability of surviving the first two months after admission to the hospital. The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are usually this ranges from 0-71, but in this data set the min and max are 3-147.
 
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+We wish to model what scores indicates death and what scores indicate you will survive for the two different scores.
 
 ```{r}
-1 + 1
+rhc_clean
 ```
-
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
-```
+model = rhc_clean |> 
+  lm(aps1 ~ death, data = _)
 
-The `echo: false` option disables the printing of code (only output is displayed).
+model
+```
