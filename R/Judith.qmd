@@ -13,15 +13,13 @@ library(table1)
 
 
 ```{r}
-
 rhc_clean |> select(age, sex, edu, race, income)
 ```
 ```{r}
-
 # Histogram of Age
 rhc_clean |>
   ggplot(aes(x = age)) +
-  geom_histogram(binwidth = 5, 
+  geom_histogram(binwidth = 5,
                  fill = "skyblue", color = "black") +
   labs(title = "Distribution of Age",
        x = "Age",
@@ -29,6 +27,7 @@ rhc_clean |>
   theme_minimal()
 
 ```
+
 ```{r}
 # rhc_clean |>
 #   ggplot(aes(x = sex, 
@@ -58,28 +57,57 @@ colnames(rhc_data)
 ```
 
 ```{r}
-# Convert Sex to factor for better visualization
-your_dataset$Sex <- factor(rhc_clean$sex, levels = c("Female", "Male"))
+```
 
-# Create a boxplot for Age and RHC
-ggplot(rhc_clean, aes(x = swang1, 
-                         y = age, 
-                         fill = sex)) +
-  geom_boxplot() +
-  labs(title = "Distribution of Age and RHC by Sex",
-       x = "RHC",
-       y = "Age") +
-  theme_minimal()
+
+```{r}
+rhc_data |> 
+  ggplot(aes(x = income, 
+           fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Income by RHC Status",
+       x = "Income",
+       y = "Count",
+       fill = "RHC Status")
+```
+
+
+```{r}
+rhc_data |> 
+  ggplot(aes(x = as.factor(sex), 
+             y = age, 
+             fill = as.factor(swang1))) +
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  labs(title = "Average Age by Sex and RHC",
+       x = "Sex",
+       y = "Average Age",
+       fill = "RHC Status")
 
 
 ```
 ```{r}
 # Create a bar plot for the count of RHC by Sex
-ggplot(rhc_clean, aes(x = swang1,
-                         fill = sex)) +
+rhc_data |> 
+  ggplot(aes(x = as.factor(edu), 
+             fill = as.factor(swang1))) +
   geom_bar() +
-  labs(title = "Count of RHC by Sex",
-       x = "RHC",
-       y = "Count") +
-  theme_minimal()
+  labs(title = "Distribution of Education by RHC Status",
+       x = "Education",
+       y = "Count",
+       fill = "RHC Status") 
+
 ```
+
+
+```{r}
+rhc_data |> 
+  ggplot(aes(x = race, 
+             fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Race by RHC Status",
+       x = "Race",
+       y = "Count",
+       fill = "RHC Status")
+```
+
+
