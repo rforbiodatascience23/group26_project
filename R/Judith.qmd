@@ -11,24 +11,37 @@ library(dplyr)
 library(table1)
 ```
 
+
 ```{r}
-rhc_clean
+
+rhc_clean |> select(age, sex, edu, race, income)
 ```
 ```{r}
+
+# Histogram of Age
 rhc_clean |>
-  ggplot(aes(x = sex, 
-             fill=factor(death))) +
-  geom_bar() +
-  labs(title = "Death females vs. males",
-       x = "Gender",
-       y = "Number of patients") +
-  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  ggplot(aes(x = age)) +
+  geom_histogram(binwidth = 5, 
+                 fill = "skyblue", color = "black") +
+  labs(title = "Distribution of Age",
+       x = "Age",
+       y = "Frequency") +
   theme_minimal()
 
-
-
 ```
 ```{r}
+# rhc_clean |>
+#   ggplot(aes(x = sex, 
+#              fill=factor(death))) +
+#   geom_bar() +
+#   labs(title = "Death females vs. males",
+#        x = "Gender",
+#        y = "Number of patients") +
+#   #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+#   theme_minimal()
+
+
+
 rhc_clean |>
   ggplot(aes(x = age, 
              fill=factor(death))) +
@@ -40,4 +53,33 @@ rhc_clean |>
   theme_minimal()
 
 ```
+```{r}
+colnames(rhc_data)
+```
 
+```{r}
+# Convert Sex to factor for better visualization
+your_dataset$Sex <- factor(rhc_clean$sex, levels = c("Female", "Male"))
+
+# Create a boxplot for Age and RHC
+ggplot(rhc_clean, aes(x = swang1, 
+                         y = age, 
+                         fill = sex)) +
+  geom_boxplot() +
+  labs(title = "Distribution of Age and RHC by Sex",
+       x = "RHC",
+       y = "Age") +
+  theme_minimal()
+
+
+```
+```{r}
+# Create a bar plot for the count of RHC by Sex
+ggplot(rhc_clean, aes(x = swang1,
+                         fill = sex)) +
+  geom_bar() +
+  labs(title = "Count of RHC by Sex",
+       x = "RHC",
+       y = "Count") +
+  theme_minimal()
+```
