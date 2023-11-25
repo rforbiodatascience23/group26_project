@@ -97,6 +97,11 @@ rhc_data |>
        fill = "RHC Status") 
 
 ```
+```{r}
+unique(rhc_clean$edu)
+
+```
+
 
 
 ```{r}
