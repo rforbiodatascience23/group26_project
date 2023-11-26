@@ -1,6 +1,18 @@
 ## Clean data
 
 ```{r}
+#| label: Load-libraries
+#| message: false 
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(dplyr)
+library(table1)
+
 #| label: Simple-cleaning-chunk-data-wrangling
 #copy paste
 rhc_clean <- rhc_data |> 
