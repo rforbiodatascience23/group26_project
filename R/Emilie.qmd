@@ -48,7 +48,13 @@ rhc_clean |>
 
 ```{r}
 
-clean1<- rhc_clean |>
+#| label: function-for-words-to-binary
+# Creating a generel function that can be used for yes and no columns
+create_binary_column <- function(x) {
+  ifelse(x == "Yes", 1, 
+  ifelse(x == "No", 0, x))
+}
+rhc_clean |>
     
   mutate(across(resp:ortho, 
                 ~create_binary_column(.))) |>
