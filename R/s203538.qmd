@@ -20,7 +20,6 @@ convert_RHC <- function(df) {
 ```
 
 
-
 ```{r}
 #| label: plot-sex-against-age
 rhc_clean |> 
@@ -44,6 +43,8 @@ rhc_clean %>%
   guides(fill = guide_legend(title = "Disease Status"))
 
 ```
+
+
 ```{r}
 #| label: meanbp-across-diagnosis-non-filtered
 #| echo: false

@@ -17,7 +17,9 @@ execute:
 ## Load Data
 {{< include 01_load.qmd >}}
 ```{r}
-quarto::quarto_render("01_load.qmd", output_format = "html")
+quarto::quarto_render(input = "01_load.qmd", 
+                      output_format = "html",
+                      output_file = "../results/01_load.html")
 ```
 ## Clean Data
 {{< include 02_clean.qmd >}}
