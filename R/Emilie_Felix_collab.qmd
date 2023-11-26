@@ -75,7 +75,8 @@ c2<- c1 |>
                      str_detect(Diagnosis, 
                                 pattern=",",
                                 negate=FALSE)==FALSE ~ Diagnosis )) |> 
-  unique.data.frame()
+  unique.data.frame() |> 
+  ungroup()
 
 
 aps1_data <- c2 |> 
@@ -89,18 +90,21 @@ aps1_data
 
 ### **Linear modelling**
 
-First we try to do the prediction based on one of the diseases.
+First we try to do the prediction based on one of the diseases that was reason for admission (card).
 
 ```{r}
 
+aps1_card<-aps1_data |> 
+  filter(Diagnosis=='card')
+
 my_first_model <- lm(formula = aps1 ~ death,
-                      data = aps1_data)
+                      data = aps1_card)
 
 my_first_model
 ```
 
 ```{r}
-aps1_data |> 
+aps1_card |> 
   group_by(death) |> 
   summarise(mu=mean(aps1))
 
@@ -108,14 +112,20 @@ aps1_data |>
 
 The intercept is the mean aps1 for those that are not dead and the slope is the difference between the mean values.
 
-It is positive which indicates a higher aps1 increases the risk of death.
+It is positive which indicates a higher aps1 increases the risk of death, when admitted with cardiac disease.
 
 ```{r}
 my_first_model |> 
   summary()
 ```
 
-```{r}
+It seams that it is statistically significant.
 
-  
+We will now try to model the death based on the aps1 for all the diseases.
+
+```{r}
+aps1_data |> 
+  group_by(Diagnosis) |> 
+  nest() |> 
+  ungroup()
 ```
