@@ -88,7 +88,7 @@ aps1_data
    
 ```
 
-### **Linear modelling**
+### **Logistic modelling**
 
 First we try to do the prediction based on one of the diseases that was reason for admission (card).
 
@@ -97,8 +97,9 @@ First we try to do the prediction based on one of the diseases that was reason f
 aps1_card<-aps1_data |> 
   filter(Diagnosis=='card')
 
-my_first_model <- lm(formula = aps1 ~ death,
-                      data = aps1_card)
+
+my_first_model <- glm(formula = death ~ aps1,
+                      data = aps1_card, family='binomial')
 
 my_first_model
 ```
@@ -110,9 +111,7 @@ aps1_card |>
 
 ```
 
-The intercept is the mean aps1 for those that are not dead and the slope is the difference between the mean values.
-
-It is positive which indicates a higher aps1 increases the risk of death, when admitted with cardiac disease.
+The intercept means that each time the APACHE score increases by one, the chance of dying increases with e\^2,5 this is roughly 2.5%.
 
 ```{r}
 my_first_model |> 
@@ -141,8 +140,8 @@ aps1_data_nested |>
 
 aps1_data_nested <- aps1_data_nested |> 
                        mutate(model_object = map(.x = data,
-                                                 .f = ~lm(formula = aps1 ~ death, 
-                                             data = .x)))
+                                                 .f = ~glm(formula = death ~ aps1, 
+                                             data = .x, family='binomial')))
 ```
 
 ```{r}
@@ -195,6 +194,7 @@ aps1_estimates
 
 ```{r}
 aps1_estimates |> 
+  filter(term=='death') |> 
   filter(is_significant=='yes') |> 
   ggplot(mapping = aes(x = estimate,
                        y = fct_reorder(Diagnosis,
