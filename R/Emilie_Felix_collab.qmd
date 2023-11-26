@@ -124,8 +124,98 @@ It seams that it is statistically significant.
 We will now try to model the death based on the aps1 for all the diseases.
 
 ```{r}
-aps1_data |> 
+aps1_data_nested <- aps1_data |> 
   group_by(Diagnosis) |> 
   nest() |> 
   ungroup()
+aps1_data_nested
+```
+
+```{r}
+aps1_data_nested |> 
+  filter(Diagnosis == "card") |> 
+  pull()
+```
+
+```{r}
+
+aps1_data_nested <- aps1_data_nested |> 
+                       mutate(model_object = map(.x = data,
+                                                 .f = ~lm(formula = aps1 ~ death, 
+                                             data = .x)))
+```
+
+```{r}
+
+aps1_data_nested |>   
+  filter(Diagnosis == "card") |> 
+    pull(model_object) |> 
+    pluck(1) |>
+    tidy(conf.int = TRUE,
+       conf.level = 0.95)
+```
+
+```{r}
+aps1_data_nested<- aps1_data_nested |> 
+  mutate(model_object_tidy = map(.x = model_object,
+                                    .f = ~tidy(x=.x,
+                                               conf.int = TRUE,
+                                               conf.level = 0.95,
+                                               )))
+```
+
+```{r}
+aps1_estimates <- aps1_data_nested |>  
+                    unnest(cols = model_object_tidy)
+aps1_estimates
+```
+
+```{r}
+aps1_estimates <- aps1_estimates |> 
+                        select(c(Diagnosis, 
+                                 p.value, 
+                                 estimate, 
+                                 conf.low, 
+                                 conf.high))
+aps1_estimates
+```
+
+```{r}
+aps1_estimates <- aps1_estimates |>
+                    
+                mutate(q.value = map_dbl(.x=p.value,
+                                     .f = ~p.adjust(
+                                                .x, 
+                                                method = 'fdr'))) |>   
+                mutate(is_significant = case_when(
+                                          q.value > 0.05 ~ 'no',
+                                          q.value <= 0.05 ~ 'yes'))
+aps1_estimates
+```
+
+```{r}
+aps1_estimates |> 
+  filter(is_significant=='yes') |> 
+  ggplot(mapping = aes(x = estimate,
+                       y = fct_reorder(Diagnosis,
+                                       estimate))) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = conf.low, 
+                     xmax = conf.high)) +
+  geom_vline(xintercept = 0) +
+  labs(x='Estimates(95% CIs)', 
+       y='',
+       title = '')
+```
+
+```{r}
+aps1_estimates |> 
+  mutate(label = case_when(is_significant == "no" ~ ' ',
+                            is_significant == "yes" ~ Diagnosis))|> 
+  ggplot(mapping = aes(x = estimate,
+                       y=-log10(p.value), color=is_significant)) +
+  geom_point()+
+  geom_text_repel(aes(label=label))+
+  labs(x='Estimates', 
+       y='aps1')
 ```
