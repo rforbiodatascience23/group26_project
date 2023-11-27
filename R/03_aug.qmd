@@ -14,7 +14,10 @@ library(table1)
 #Augumented data
 ```{r}
 #| label: Augumenting-initiation.
-
+create_binary_column <- function(x) {
+  ifelse(x == "Yes", 1, 
+  ifelse(x == "No", 0, x))
+}
 #Creates one column with all diseases that is reason for admission to the hospital, instead of them all being present for all patients.
 rhc_clean_long <- rhc_clean |>
     
