@@ -168,7 +168,7 @@ model_estimates <- aps1_estimates |>
                      xmax = conf.high, color=is_significant)) +
   geom_vline(xintercept = 0) +
   scale_color_manual(
-    values = c(no = "darkred", yes = "darkgoldenrod1"),
+    values = c(No = "darkred", Yes = "darkgoldenrod1"),
   ) +
   labs(x='Estimates(95% CIs)', 
        y='Diseases',
