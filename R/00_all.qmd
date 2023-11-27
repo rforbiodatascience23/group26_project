@@ -29,11 +29,33 @@ quarto::quarto_render(input = "02_clean.qmd",
                       output_file = "../results/02_clean.html")
 ```
 ## Augment Data
+{{< include 03_aug.qmd >}}
+```{r}
+quarto::quarto_render(input = "03_aug.qmd", 
+                      output_format = "html",
+                      output_file = "../results/03_aug.html")
+```
 ## Description
+{{< include 04_describe.qmd >}}
+```{r}
+quarto::quarto_render(input = "04_describe.qmd", 
+                      output_format = "html",
+                      output_file = "../results/04_describe.html")
+```
 ## Analysis 1
-{{< include s203538.qmd >}}
+{{< include 05_analysis_1.qmd >}}
+```{r}
+quarto::quarto_render(input = "05_analysis_1.qmd", 
+                      output_format = "html",
+                      output_file = "../results/05_analysis_1.html")
+```
 ## Analysis 2
-{{< include Felix_analysis.qmd >}}
+{{< include 06_analysis_2.qmd >}}
+```{r}
+quarto::quarto_render(input = "06_analysis_2.qmd", 
+                      output_format = "html",
+                      output_file = "../results/06_analysis_2.html")
+```
 ## Analysis 3
 {{< include Emilie.qmd >}}
 ## Analysis 4
