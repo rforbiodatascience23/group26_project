@@ -31,7 +31,8 @@ rhc_clean_long <- rhc_clean |>
   filter(Values==1) |> 
   
    group_by(ptID) |> 
-  mutate(Diagnosis = paste(unique(Diagnosis), collapse = ",")) 
+  mutate(Diagnosis = paste(unique(Diagnosis), collapse = ",")) |> 
+  ungroup() 
   
 
 #makes one value for patients with multiple diseases as reason for admission and delete repeated columns
@@ -44,8 +45,7 @@ rhc_aug1 <- rhc_clean_long |>
                                 pattern=",",
                                 negate=FALSE)==FALSE ~ Diagnosis )) |> 
   unique.data.frame() |> 
-  ungroup() |> 
-   mutate(aps1_Interval = cut(aps1, breaks = c(0,15,30,45,60,75,90,105,120,135,150), labels = c("0-15", "15-30", "30-45", "45-60", "60-75","75-90", "90-105", "105-120", "120-135", "135-150")))
+  mutate(aps1_Interval = cut(aps1, breaks = c(0,15,30,45,60,75,90,105,120,135,150), labels = c("0-15", "15-30", "30-45", "45-60", "60-75","75-90", "90-105", "105-120", "120-135", "135-150")))
 
 #Add a column with the number of comorbidities each patient has.
 rhc_aug1<- rhc_aug1 |>
