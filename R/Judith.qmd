@@ -207,6 +207,29 @@ rhc_clean |>
   filter(death == 1) |> 
   select(edu_group, percent)
 ```
+## Medical assurance
+
+```{r}
+# Count of RHC by Medical Assurance
+rhc_clean |> 
+  ggplot(aes((x = ninsclas), 
+             fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Education by RHC Status",
+       x = "Education",
+       y = "Count",
+       fill = "RHC Status")
+
+```
+```{r}
+## Percentage of RHC/No RHC by medical assurance
+rhc_clean |> 
+  group_by(ninsclas, as.factor(swang1)) |> 
+  summarize(count = n()) |> 
+  group_by(ninsclas) |> 
+  mutate(percent = count / sum(count) * 100)
+```
+
 
 
 ## Others
