@@ -8,8 +8,9 @@ library(ggrepel)
 
 This file works with analysing the dataset using PCA.
 
+Load data
 ```{r}
-rhc_aug
+rhc_aug <- read_csv("../data/rhc_aug.csv")
 ```
 
 ## PCA analysis

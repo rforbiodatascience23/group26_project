@@ -14,6 +14,11 @@ library(table1)
 
 The analysis explores the correlation between illnesses, Right Heart Catheterization (RHC) treatment, and the Acute Physiology Score (APS) concerning mortality. Various plots are generated to create an understanding of the dataset, aiming to reveal potential relationships among the mentioned attributes. These visual representations serve as a tool to discover whether specific factors are associated with death.
 
+Load data
+```{r}
+rhc_aug <- read_csv("../data/rhc_aug.csv")
+```
+
 
 To get a quick overview of some the variables in the dataset we can plot some very simple plots. We start out by visualizing sex against the age, and color by the death column,
 ```{r}

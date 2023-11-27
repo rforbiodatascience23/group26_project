@@ -28,6 +28,11 @@ library(broom)
 library(purrr)
 ```
 
+Load data
+```{r}
+rhc_aug <- read_csv("../data/rhc_aug.csv")
+```
+
 First we see if there is a general pattern in the mean values of the APACHE scores.
 
 ```{r}
