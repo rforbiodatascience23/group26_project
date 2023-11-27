@@ -380,7 +380,8 @@ rhc_aug |>
        y = "Number of patients",
        fill = "Death") +
   scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
 ```
 
@@ -413,7 +414,8 @@ rhc_aug |>
        y = "Number of patients",
        fill = "RHC Status") +
   scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 The following chunk shows the corresponding percentage of RHC procedures by medical assurance.
@@ -443,6 +445,7 @@ Individuals without insurance and those with private insurance have higher perce
 
 death_count <- rhc_aug |>
   # filter(death == 0) |> 
+  mutate(income = factor(income, levels = rev(levels(as.factor(income))))) |> 
   ggplot(aes(x = income, 
              fill = as.factor(death))) +
   geom_bar(position = "dodge") +
@@ -463,6 +466,26 @@ ggsave(filename = "death_count.png",
        limitsize = TRUE)
 
 ```
+
+### How many people under $11k have private and how many have Medicare?
+```{r}
+rhc_aug |> 
+  ggplot(aes(x = income, 
+             fill=factor(ninsclas))) +
+  geom_bar() +
+  labs(title = "Income by Medical Assurance",
+       x = "Income",
+       y = "Number of patients",
+       fill = "Medical Insurance") +
+  theme_minimal()
+```
+
+```{r}
+rhc_aug |> 
+  filter(income == "Under $11k", ninsclas %in% c("Medicare", "Private")) |> 
+  count(income, ninsclas)
+```
+
 
 ```{r}
 # Bar plot for RHC by income and race
@@ -498,8 +521,6 @@ rhc_aug |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-
-## FINAL PLOTS (ones in the presentation)
 
 
 
