@@ -19,7 +19,7 @@ Furthermore, we choose the variables we wanted to investigate. Then we used the 
 ```{r}
 rhc_for_pca <- rhc_aug |>
   select(c(death,swang1,age,edu,meanbp1,resp1,hrt1,crea1,pot1,surv2md1)) |> 
-    mutate(swang1 = case_when(
+    mutate(death = case_when(
          death == 0 ~ "Alive",
          death == 1 ~ "Dead"))
 rhc_for_pca
@@ -36,16 +36,25 @@ pca_fit
 I plot the coordinates of the first and second PCs, as well as the result of the different observations.
 ```{r}
 rhc_for_pca
-coordinates <- pca_fit |> 
+pca_fit |> 
   augment(rhc_for_pca) |> # add original dataset back in
-  ggplot(aes(.fittedPC1, .fittedPC2,color = death)) + 
+  ggplot(aes(.fittedPC1, .fittedPC2,color = death), alpha = 0.5) + 
   geom_point(size = 1.5) +
   scale_color_manual(
-    values = c(Dead = "red", Alive = "green")
+    values = c(Dead = "darkred", Alive = "darkolivegreen2"),
+  ) +
+  labs(
+    x = "Principal Component 1",
+    y = "Principal Component 2"
   )
 coordinates
 
-ggsave("../results/result_plotted_on_coordinates.png", coordinates)
+ggsave(filename = "result_plotted_on_coordinates.png",
+       plot = coordinates,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
 
 
 ```
@@ -61,11 +70,9 @@ pca_fit |>
   tidy(matrix = "eigenvalues")
 
 
-1.2996592 / (1.2996592 + 1.1554729 +1.1024399 +1.0453468+ 0.9791764+ 0.8827722+ 0.8353270 +0.8135874 +0.7549012)
-
-
 transformation_coefficient <-  1/0.18768
 transformation_coefficient
+
 pca_fit |> 
   tidy(matrix = "eigenvalues") |> 
   select(cumulative) |> 
@@ -86,9 +93,13 @@ p1 <- pca_fit |>
                         labels = scales::percent_format())
   ) +
   annotate("text", label = "PCs needed : 7", x = 7, y = 0.125, color = "darkred")
-
-ggsave("../results/PCA_explained.png", p1)
-
+p1
+ggsave(filename = "PCA_explained.png",
+       plot = p1,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
 
 ```
 
@@ -119,6 +130,9 @@ pca_fit |>
   ) +
   xlim(-1.25, .5) + ylim(-.5, 1) +
   coord_fixed() # fix aspect ratio to 1:1
+
+
+
 
 ```
 
