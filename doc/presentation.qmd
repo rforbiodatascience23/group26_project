@@ -34,12 +34,15 @@ library(table1)
 
 The analysis was performed on the dataset: Right Heart Catheterization (RHC) Dataset, first analysed Connors \italics(et. al) (1996)
 
-It focuses on the procedure right heart catheterization, and has many different variables pertaining to reason for hospitalization and underlying disease, as well as health information about the patients.
+It focuses on the effect RHC has on the patients
 
-Contains patient-, socioeconomic-, physiological-, disease-, and survival information. 
+Used propensity score matching to create an artificial control group
 
-The original study 
 
+Their study found that patients undergoing RHC experienced shorter survival times.
+
+
+Attribute datta includes patient demographics, socioeconomic details, physiological parameters, disease-related information, and survival outcomes.
 
 ```{r}
 #| echo: false
@@ -69,26 +72,24 @@ We performed our analysis using $\color{red}{\text{Tidyverse}}$.
 :::: {.columns}
 
 ::: {.column width="60%"}
-![](../results/workflow.png){width=60% fig-align="left"}
+![](../results/workflow.png){width=90% fig-align="left"}
 
 :::
 
 ::: {.column width="40%"}
 
+::: {.incremental}
 
 Before cleaning and augmentation:
 
 
-::: {.incremental}
 
 - 5735 patients
 - 62 attributes
 
-:::
 
 After cleaning and augmentation:
 
-::: {.incremental}
 - 5612 patients 
 
 - 53 attributes
@@ -128,17 +129,17 @@ rhc_clean |> mutate(sex = factor(sex),
 
 :::: {.columns}
 
-::: {.column width="80%"}
+::: {.column width="75%"}
 
-![](../results/meanbp_plot.png){width=60% fig-align="left"}
+![](../results/meanbp_plot.png){width=100% fig-align="left"}
 :::
 
-::: {.column width="20%"}
+::: {.column width="25%"}
 
 ::: {.incremental}
 
-- First item
-- Second item
+- Bimodal distributions
+- Seems that mean blood pressure is higher in patients without RHC
 
 :::
 
@@ -154,16 +155,18 @@ rhc_clean |> mutate(sex = factor(sex),
 
 :::: {.columns}
 
-::: {.column width="80%"}
-![](../results/death_count.png){width=60% fig-align="left"}
+::: {.column width="75%"}
+![](../results/death_count.png){width=100% fig-align="left"}
 :::
 
-::: {.column width="20%"}
+::: {.column width="25%"}
 
 ::: {.incremental}
 
-- First item
-- Second item
+- Most patients have low income.
+- Patients are mostly covered by Medicare or Private medical assurance.
+- Individuals in lower income categories have a higher mortality.
+- Individuals covered by Medicare have the highest mortality.
 
 :::
 
@@ -184,13 +187,13 @@ rhc_clean |> mutate(sex = factor(sex),
 ::: {.column width="50%"}
 
 
-![](../results/result_plotted_on_coordinates.png){width=90% fig-align="right"}
+![](../results/result_plotted_on_coordinates.png){width=100% fig-align="right"}
 
 :::
 
 ::: {.column width="50%"}
 
-![](../results/PCA_explained.png){width=90% fig-align="right"}
+![](../results/PCA_explained.png){width=100% fig-align="right"}
 
 
 
