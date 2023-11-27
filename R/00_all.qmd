@@ -1,5 +1,5 @@
 ---
-title: "Group 26 - Project"
+title: "Group 26 - Project" 
 author: 
 - "Carl Felix Freiesleben - s203521"
 - "Emilie Munk - s203538"
