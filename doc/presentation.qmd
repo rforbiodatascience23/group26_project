@@ -30,6 +30,8 @@ library(patchwork)
 library(ggseqlogo)
 library(dplyr)
 library(table1)
+library(purrr)
+library(broom)
 ```
 
 The analysis was performed on the dataset: Right Heart Catheterization (RHC) Dataset, first analysed Connors \italics(et. al) (1996)
@@ -105,7 +107,8 @@ After cleaning and augmentation:
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Materials and Methods (exploratory dataviz)
+## Materials and Methods
+
 
 Familiarize ourselves with the data by extracting different information about the attributes and made numerous plots
 
@@ -224,14 +227,90 @@ rhc_aug |> mutate(sex = factor(sex),
 
 :::: {.columns}
 
-::: {.column width="50%"}
-More beautiful plots by Emilie
+::: {.column width="30%"}
+
+```{r}
+library("tidyverse")
+#| echo: false
+#| eval: true
+aps1_data_nested <- rhc_aug |> 
+  group_by(Diagnosis) |> 
+  nest() |> 
+  ungroup()
+aps1_data_nested
+
+aps1_data_nested <- aps1_data_nested |> 
+    mutate(model_object = map(.x = data,
+                              .f = ~glm(formula = death ~ aps1,data = .x, 
+                                        family='binomial')))
+
+aps1_data_nested <- aps1_data_nested |> 
+  group_by(Diagnosis) |> 
+  filter(Diagnosis != "ortho") |> 
+  mutate(model_object_tidy = map(.x = model_object,
+                                 .f = ~tidy(conf.int = TRUE,
+                                            conf.level = 0.95,
+                                            x = .x)))
+
+aps1_estimates <- aps1_data_nested |>  
+                    unnest(cols = model_object_tidy)
+
+aps1_estimates <- aps1_estimates |> 
+                        select(c(term,
+                                 Diagnosis, 
+                                 p.value, 
+                                 estimate, 
+                                 conf.low, 
+                                 conf.high))
+
+aps1_estimates <- aps1_estimates |>
+                    
+    mutate(q.value = map_dbl(.x=p.value,
+                             .f = ~p.adjust(.x, 
+                                            method = 'fdr'))) |> 
+  
+    mutate(is_significant = case_when(q.value > 0.05 ~ 'no',
+                                      q.value <= 0.05 ~ 'yes'))
+
+intercepts<-aps1_estimates |>   
+  filter(term == "(Intercept)") |> 
+  select(Diagnosis, estimate, p.value) 
+
+coefficients<-aps1_estimates |>   
+  filter(term == "aps1") |> 
+  select(Diagnosis, estimate)
+
+model_variables<- 
+  inner_join(coefficients, intercepts, by = "Diagnosis") |> 
+  rename(Intercept=estimate.y) |> 
+  rename(Coefficient=estimate.x) |> 
+  ungroup()
+
+```
+
+```{r}
+#| echo: false
+#| eval: true
+
+model_variables
+
+
+```
+
+
+
 
 :::
 
+::: {.column width="70%"}
+
 ::: {.column width="50%"}
 
-![](../results/model_estimates.png){width=90% fig-align="right"}
+![](../results/model_estimates.png){width=120% fig-align="center"}
+
+![](../results/model_estimates_2.png){width=120% fig-align="center"}
+
+:::
 
 
 :::
