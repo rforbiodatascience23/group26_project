@@ -50,3 +50,5 @@ rhc_aug |>
   geom_bar(position = "stack") 
 
 ```
+
+It looks like there might be a correlation between a higher aps1 score and dying. We will therefore try to model this.

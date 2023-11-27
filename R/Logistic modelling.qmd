@@ -6,9 +6,11 @@ editor: visual
 
 ## Logistic modelling
 
-The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are usually this ranges from 0-71, but in this data set the min and max are 3-147.
+The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are. Usually this ranges from 0-71, but in this data set the min and max are 3-147, this is probably because the scoring system has been changed since the data was created.
 
-We wish to model what scores indicates death and what scores indicate you will survive for the two different scores.
+We wish to model what scores indicates death and what scores indicate you will survive for the APACHE score.
+
+As the value death is a binomial value we choose the logistic binomial model to try and fit the data.
 
 ```{r}
 library(tidyverse)
@@ -24,27 +26,17 @@ library(broom)
 library(purrr)
 ```
 
-```{r}
-rhc_aug |> 
-  select(ptID, aps1, death) |> 
-  ggplot(aes(x = aps1, fill=factor(death))) +
-  geom_bar(position = "stack") 
-  
-  
-```
+First we see if there is a general pattern in the mean values of the APACHE scores.
 
 ```{r}
 rhc_aug |> 
-  select(ptID, aps1_Interval, death) |> 
-  ggplot(aes(x = aps1_Interval, fill=factor(death))) +
-  geom_bar(position = "stack") 
-
-  
+  group_by(Diagnosis, death) |> 
+  summarise(mu=mean(aps1))
 ```
 
-It looks like there might be a correlation between a higher aps1 score and dying.we will now try and model this.
+In all cases it is clear that the means of the APACHE scores are higher for those who end up dying.
 
-### **Logistic modelling**
+### **Model of one disease**
 
 First we try to do the prediction based on one of the diseases that was reason for admission (card).
 
@@ -53,33 +45,26 @@ First we try to do the prediction based on one of the diseases that was reason f
 aps1_card<-rhc_aug |> 
   filter(Diagnosis=='card')
 
+aps1_card_model <- glm(formula = death ~ aps1,
+                      data = aps1_card, 
+                      family='binomial')
 
-my_first_model <- glm(formula = death ~ aps1,
-                      data = aps1_card, family='binomial')
-
-my_first_model
-```
-
-```{r}
-aps1_card |> 
-  group_by(death) |> 
-  summarise(mu=mean(aps1))
-
+aps1_card_model
 ```
 
 The intercept means that each time the APACHE score increases by one, the chance of dying increases with e\^2,5 this is roughly 2.5%.
 
 ```{r}
-my_first_model |> 
+aps1_card_model |> 
   summary()
 ```
 
-It seams that it is statistically significant.
+It seems that it is statistically significant.
 
-We will now try to model the death based on the aps1 for all the diseases.
+We then choose to model the outcome for all the different admission diagnoses to see if we can predict the outcome of death by the APACHE score.
 
 ```{r}
-aps1_data_nested <- aps1_data |> 
+aps1_data_nested <- rhc_aug |> 
   group_by(Diagnosis) |> 
   nest() |> 
   ungroup()
@@ -95,9 +80,9 @@ aps1_data_nested |>
 ```{r}
 
 aps1_data_nested <- aps1_data_nested |> 
-                      mutate(model_object = map(.x = data,
-                                                .f = ~glm(formula = death ~ aps1, 
-                                             data = .x, family='binomial')))
+    mutate(model_object = map(.x = data,
+                              .f = ~glm(formula = death ~ aps1,                                         data = .x, 
+                                        family='binomial')))
 
 aps1_data_nested
 ```
@@ -112,42 +97,30 @@ aps1_data_nested |>
        conf.level = 0.95)
 ```
 
-```{r}
-aps1_data_nested
-
-aps1_data_nested |> filter(Diagnosis == "ortho") |> 
-  pull(model_object)
-```
+We exclude the ortho diagnosis as we earlier in other analysis saw, it only had 3 data points, which is probaly also the reason why this model fails on this value.
 
 ```{r}
-aps1_data_nested |> 
-  mutate(model_object_tidy = map(.x = model_object, 
-                                 .f=~tidy(x=.x,
-                                       conf.int = TRUE,
-                                        conf.level = 0.95)))
-
-
-aps1_data_nested <- aps1_data_nested |>
-  group_by(Diagnosis)|>
+aps1_data_nested <- aps1_data_nested |> 
+  group_by(Diagnosis) |> 
   filter(Diagnosis != "ortho") |> 
-  mutate(model_object_tidy = 
-           map(.x = model_object,
-               .f = ~tidy(
-                 conf.int = TRUE,
-                 conf.level = 0.95,
-                 x = .x)))
-
+  mutate(model_object_tidy = map(.x = model_object,
+                                 .f = ~tidy(conf.int = TRUE,
+                                            conf.level = 0.95,
+                                            x = .x)))
+aps1_data_nested
 ```
 
 ```{r}
 aps1_estimates <- aps1_data_nested |>  
                     unnest(cols = model_object_tidy)
 aps1_estimates
+
 ```
 
 ```{r}
 aps1_estimates <- aps1_estimates |> 
-                        select(c(Diagnosis, 
+                        select(c(term,
+                                 Diagnosis, 
                                  p.value, 
                                  estimate, 
                                  conf.low, 
@@ -158,81 +131,44 @@ aps1_estimates
 ```{r}
 aps1_estimates <- aps1_estimates |>
                     
-                mutate(q.value = map_dbl(.x=p.value,
-                                     .f = ~p.adjust(
-                                                .x, 
-                                                method = 'fdr'))) |>   
-                mutate(is_significant = case_when(
-                                          q.value > 0.05 ~ 'no',
-                                          q.value <= 0.05 ~ 'yes'))
+    mutate(q.value = map_dbl(.x=p.value,
+                             .f = ~p.adjust(.x, 
+                                            method = 'fdr'))) |> 
+  
+    mutate(is_significant = case_when(q.value > 0.05 ~ 'no',
+                                      q.value <= 0.05 ~ 'yes'))
+
 aps1_estimates
 ```
 
+We plot the estimates:
+
 ```{r}
 aps1_estimates |>
+  filter(term=='aps1') |> 
   ggplot(mapping = aes(x = estimate,
                        y = fct_reorder(Diagnosis,
                                        estimate))) +
-  geom_point() +
+  geom_point(aes(color=is_significant)) +
   geom_errorbarh(aes(xmin = conf.low, 
-                     xmax = conf.high)) +
+                     xmax = conf.high, color=is_significant)) +
   geom_vline(xintercept = 0) +
   labs(x='Estimates(95% CIs)', 
-       y='',
+       y='Diseases',
        title = '')
 ```
 
+The higher the estimate, the higher the risk of dying is by each rise in the APACHE score.
+
 ```{r}
 aps1_estimates |> 
+  filter(term=='aps1') |> 
   mutate(label = case_when(is_significant == "no" ~ ' ',
                             is_significant == "yes" ~ Diagnosis))|> 
   ggplot(mapping = aes(x = estimate,
-                       y=-log10(p.value), color=is_significant)) +
+                       y=p.value, color=is_significant)) +
   geom_point()+
   geom_text_repel(aes(label=label))+
   labs(x='Estimates', 
-       y='aps1')
-```
-
-```{r}
-#Augumented data
-
-  #| label: function-for-words-to-binary
-# Creating a general function that can be used for yes and no columns
-create_binary_column <- function(x) {
-  ifelse(x == "Yes", 1, 
-  ifelse(x == "No", 0, x))
-}
-
-#Creates one column with all diseases that is reason for admission to the hospital, instead of them all being present for all patients.
-rhc_clean_long <- rhc_clean |>
-    
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |>
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values")|> 
-  filter(Values==1) |> 
-  
-   group_by(ptID) |> 
-  mutate(Diagnosis = paste(unique(Diagnosis), collapse = ",")) |> 
-  ungroup() 
-  
-
-#makes one value for patients with multiple diagnosis as reason for admission and delete repeated columns
-rhc_aug1 <- rhc_clean_long |>
-  mutate(Diagnosis=
-           case_when(str_detect(Diagnosis, 
-                                pattern=",",
-                                negate=FALSE)==TRUE ~ "multiple diagnosis", 
-                     str_detect(Diagnosis, 
-                                pattern=",",
-                                negate=FALSE)==FALSE ~ Diagnosis )) |> 
-  unique.data.frame() |> 
-  mutate(aps1_Interval = cut(aps1, breaks = c(0,15,30,45,60,75,90,105,120,135,150), labels = c("0-15", "15-30", "30-45", "45-60", "60-75","75-90", "90-105", "105-120", "120-135", "135-150")))
-
-#Add a column with the number of comorbidities each patient has.
-rhc_aug1<- rhc_aug1 |>
-  rowwise() |> 
-  mutate(comorbidities=sum(c_across(cardiohx:amihx)))
+       y='p-value')
 ```
