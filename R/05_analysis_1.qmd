@@ -451,7 +451,7 @@ death_count <- rhc_aug |>
        y = "Number of patients",
        fill = "Death status") +
   facet_wrap(~ninsclas) +
-  # scale_fill_manual(values = c("red", "blue")) +
+  scale_fill_manual(name = "death", values = c( "darkolivegreen2", "red")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 death_count
 
