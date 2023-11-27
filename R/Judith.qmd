@@ -1,3 +1,5 @@
+## Here we will do a SOCIOECONOMIC analysis
+
 # Libraries 
 ```{r}
 library(tidyverse)
@@ -402,11 +404,12 @@ rhc_clean |>
   filter(death == 1) |> 
   select(ninsclas, percent)
 ```
-Individuals covered by Medicare having the highest percentage of deaths.
 
 
+Individuals covered by Medicare having the highest percentage of deaths. This can be because Medicare is primarily for individuals aged 65 and older or those with certain disabilities, who may have a higher prevalence of chronic health conditions and therefore a higher risk of mortality. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
+Following plot provides insights into the RHC appliance rates across different medical assurance.
 ```{r}
 # Count of RHC by Medical Assurance
 rhc_clean |> 
@@ -415,19 +418,28 @@ rhc_clean |>
   geom_bar() +
   labs(title = "Distribution of Medical assurance by RHC Status",
        x = "Medical assurance",
-       y = "Count",
-       fill = "RHC Status")
-
+       y = "Number of patients",
+       fill = "RHC Status") +
+  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  theme_minimal()
 ```
 
+The following chunk shows the corresponding percentage of RHC procedures by medical assurance.
 ```{r}
-## Percentage of RHC/No RHC by medical assurance
+## Percentage of RHC by medical assurance
 rhc_clean |> 
-  group_by(ninsclas, as.factor(swang1)) |> 
+  group_by(ninsclas, swang1) |> 
   summarize(count = n()) |> 
   group_by(ninsclas) |> 
-  mutate(percent = count / sum(count) * 100)
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(swang1 == "RHC") |> 
+  select(ninsclas, percent)
 ```
+Individuals without insurance and those with private insurance have higher percentages of RHC procedures. Individuals without insurance may have limited access to healthcare services and may seek RHC procedures when their condition becomes severe. On the other hand, individuals with private insurance may have better access to healthcare facilities and may be more likely to undergo diagnostic procedures like RHC. Further research would be needed to fully understand and check the underlying reasons for these variations.
+
+
+
 
 
 ## Others
@@ -487,7 +499,6 @@ rhc_clean |>
 
 
 ## FINAL PLOTS (ones in the presentation)
-
 
 
 
