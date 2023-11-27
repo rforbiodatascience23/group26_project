@@ -471,8 +471,7 @@ income_medicalinsurance <- rhc_aug |>
   labs(title = "Income by Medical Assurance",
        x = "Income",
        y = "Number of Patients",
-       fill = "Medical Insurance") +
-  theme_minimal()
+       fill = "Medical Insurance")
 
 income_medicalinsurance
 
