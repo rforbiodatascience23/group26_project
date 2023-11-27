@@ -1,0 +1,22 @@
+
+
+```{r}
+  #| label: function-for-words-to-binary
+#' Add together two numbers. To be used in a mutate function, when wanting to convert several columns to binary.
+#' The mutate function contains the data that is to be converted, thus the only input is the column name.
+#' 
+#' @param x The column name
+#' @returns A binarized column
+#' @examples
+#' rhc_clean_long <- rhc_clean |>
+#' mutate(across(resp:ortho, 
+#' ~create_binary_column(.)))
+#' 
+#' 
+create_binary_column <- function(x) {
+  ifelse(x == "Yes", 1, 
+  ifelse(x == "No", 0, x))
+}
+
+```
+
