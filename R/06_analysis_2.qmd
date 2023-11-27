@@ -1,20 +1,32 @@
-```{r}
-library(ggplot2)
-library(table1)
-```
+## Here we will do a DISEASE analysis
 
-Table1
-```{r}
+## copypaste your code snippets that fit for this analysis. Dont delete your original document until we are completely finished, but rename it as _done. Fks. mine is Josefine_DONE.qmd. This way we have a backup if something fucks up. 
 
-T1 <- rhc_clean |> mutate(sex = factor(sex),
-                    swang1 = factor(swang1),
-                    death = factor(death)) |> 
-  table1(x = formula(~ sex + age + race + swang1 | death),
-         data = _)
-T1
+##only write under your own name :)) 
 
-```
 
+
+#Emilie
+
+
+
+
+#Sahand
+
+
+
+
+#Judith
+
+
+
+
+#Felix
+
+
+
+
+#Josefine 
 This can be used to plot all individual variables to compare the variable with how many people died
 ```{r}
 rhc_clean |> count(death, swang1) |> 
@@ -65,9 +77,3 @@ rhc_clean |> pivot_longer(ends_with("hx"),
 
 ```
 
-
-What diseases lead to getting RHC
-
-What diseases lead to death even when getting RHC
-
-What 
