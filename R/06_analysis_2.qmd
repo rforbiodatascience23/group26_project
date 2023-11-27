@@ -28,7 +28,7 @@ rhc_aug |>
 ```
 It is now seen here that there is no apparent pattern for death based on the sex against age plot above. 
 
-Another thing that we might want visualize is the mean blood pressure against each diagnosis. Before the data was agumented the code below was used to show people without disease as well with the legend label "0". Though, as the agumented code data was implemented the plot below show the same as the next plot
+Another thing that we might want visualize is the mean blood pressure against each diagnosis. Before the data was agumented the code below was used to show people without disease as well with the legend label "0". Though, as the agumented code data was implemented the plot below show the same as the next plot. 
 ```{r}
 #| label: meanbp-against-diagnosis-non-filtered
 #| echo: false
@@ -49,7 +49,7 @@ rhc_aug |>
   
 ```
 
-This plot 
+This plot is the same as the code above with color mapping for each diagnosis. It show the mean blood pressure for each diagnosis
 ```{r}
 #| label: meanbp-across-diagnosis-filtered
 rhc_aug |> 
@@ -145,42 +145,6 @@ rhc_aug |>
                                    hjust = 1,
                                    vjust = 1))
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 This plot shows all the diseases and how many people have it = 1 or dont have the disease = 0.
