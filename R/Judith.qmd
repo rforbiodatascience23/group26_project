@@ -11,6 +11,9 @@ library(dplyr)
 library(table1)
 ```
 
+```{r}
+colnames(rhc_clean)
+```
 
 ```{r}
 rhc_clean |> select(age, sex, edu, race, income)
@@ -29,18 +32,31 @@ rhc_clean |>
 ```
 
 ```{r}
-# rhc_clean |>
-#   ggplot(aes(x = sex, 
-#              fill=factor(death))) +
-#   geom_bar() +
-#   labs(title = "Death females vs. males",
-#        x = "Gender",
-#        y = "Number of patients") +
-#   #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
-#   theme_minimal()
+# Death females vs. males
+rhc_clean |>
+  ggplot(aes(x = sex,
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "Death females vs. males",
+       x = "Gender",
+       y = "Number of patients") +
+  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+```
+```{r}
+rhc_clean |> 
+  ggplot(aes(x = race, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "Death in race",
+       x = "Race",
+       y = "Count",
+       fill = "Death")
+```
 
 
-
+```{r}
+# Death in different ages
 rhc_clean |>
   ggplot(aes(x = age, 
              fill=factor(death))) +
@@ -52,16 +68,9 @@ rhc_clean |>
   theme_minimal()
 
 ```
-```{r}
-colnames(rhc_data)
-```
 
 ```{r}
-```
-
-
-```{r}
-rhc_data |> 
+rhc_clean |> 
   ggplot(aes(x = income, 
            fill = as.factor(swang1))) +
   geom_bar() +
@@ -71,9 +80,21 @@ rhc_data |>
        fill = "RHC Status")
 ```
 
+```{r}
+rhc_clean |> 
+  ggplot(aes(x = income, 
+             fill = factor(death))) +
+  geom_bar() +
+  labs(title = "Distribution of Income by Death",
+       x = "Income",
+       y = "Count",
+       fill = "Death")
+```
+
+
 
 ```{r}
-rhc_data |> 
+rhc_clean |> 
   ggplot(aes(x = as.factor(sex), 
              y = age, 
              fill = as.factor(swang1))) +
@@ -85,27 +106,37 @@ rhc_data |>
 
 
 ```
+
 ```{r}
-# Create a bar plot for the count of RHC by Sex
-rhc_data |> 
-  ggplot(aes(x = as.factor(edu), 
+#'edu_group' based on the cut function
+rhc_clean$edu_group <- cut(rhc_clean$edu, 
+                           breaks = c(-Inf, 10, 20, Inf), 
+                           labels = c("<10 years", "between 10-20 years", ">20 years"), 
+                           include.lowest = TRUE,
+                           na.rm = TRUE)
+
+# rhc_clean |> 
+#   select(edu_group)
+
+```
+
+
+```{r}
+# Count of RHC by Education
+rhc_clean |> 
+  ggplot(aes((x = edu_group), 
              fill = as.factor(swang1))) +
   geom_bar() +
   labs(title = "Distribution of Education by RHC Status",
        x = "Education",
        y = "Count",
-       fill = "RHC Status") 
-
-```
-```{r}
-unique(rhc_clean$edu)
+       fill = "RHC Status")
 
 ```
 
 
-
 ```{r}
-rhc_data |> 
+rhc_clean |> 
   ggplot(aes(x = race, 
              fill = as.factor(swang1))) +
   geom_bar() +
@@ -115,4 +146,16 @@ rhc_data |>
        fill = "RHC Status")
 ```
 
-
+```{r}
+# Bar plot for Death by Race and RHC Status
+rhc_clean |>
+  ggplot(aes(x = race,
+             fill = as.factor(death),
+             group = as.factor(swang1))) +
+  geom_bar(position = "dodge") +
+  labs(title = "Death Count by Race and RHC Status",
+       x = "Race",
+       y = "Count",
+       fill = "Death status") +
+  facet_wrap(~swang1)
+```
