@@ -124,7 +124,7 @@ rhc_aug |>
 
 ```{r}
 #| label: meanbp-RHC-based-on-primary-disease
-rhc_aug |> 
+meanbp_plot <- rhc_aug |> 
     ggplot(aes(x = cat1, 
              y = meanbp1,
              fill = factor(swang1))) +
@@ -144,6 +144,16 @@ rhc_aug |>
   theme(axis.text.x = element_text(angle = 30,
                                    hjust = 1,
                                    vjust = 1))
+
+meanbp_plot
+
+ggsave(filename = "meanbp_plot.png",
+       plot = meanbp_plot,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
+
 ```
 
 
