@@ -86,13 +86,10 @@ quarto::quarto_render(input = "08_logistic_modelling.qmd",
 file.rename(from = "08_logistic_modelling.html",
             to = "../results/08_logistic_modelling.html")
 ```
-## Functions
-{{< include 99_functions.qmd >}}
+## All
 ```{r}
-quarto::quarto_render(input = "99_functions.qmd",
-                      output_format = "html")
 
-file.rename(from = "99_functions.html",
-            to = "../results/99_functions.html")
+file.rename(from = "00_all.html",
+            to = "../results/00_all.html")
 ```
 
