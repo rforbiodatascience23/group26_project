@@ -436,9 +436,11 @@ Individuals without insurance and those with private insurance have higher perce
 
 ```{r}
 death_count <- rhc_aug |>
+    mutate(death = case_when(
+         death == 0 ~ "Alive",
+         death == 1 ~ "Dead")) |> 
   # filter(death == 0) |> 
-  mutate(income = factor(income, 
-                         levels = rev(levels(as.factor(income))))) |> 
+  mutate(income = factor(income, levels = rev(levels(as.factor(income))))) |> 
   ggplot(aes(x = income, 
              fill = as.factor(death))) +
   geom_bar(position = "dodge") +
@@ -447,8 +449,7 @@ death_count <- rhc_aug |>
        y = "Number of patients",
        fill = "Death status") +
   facet_wrap(~ninsclas) +
-  scale_fill_manual(name = "death", 
-                    values = c("darkolivegreen2", "red")) +
+  scale_fill_manual(name = "Death", values = c( "darkolivegreen2", "red")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 death_count
 
@@ -475,7 +476,8 @@ rhc_aug |>
 ```
 ```{r}
 rhc_aug |> 
-  filter(income == "Under $11k", ninsclas %in% c("Medicare", "Private")) |> 
+  filter(income == "Under $11k", 
+         ninsclas %in% c("Medicare", "Private")) |> 
   count(income, ninsclas)
 ```
 
@@ -492,7 +494,8 @@ rhc_aug |>
        x = "Income",
        y = "Number of patients") +
   facet_wrap(~income) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme(axis.text.x = element_text(angle = 45, 
+                                   hjust = 1)) +
   theme_minimal()
   
 ```
