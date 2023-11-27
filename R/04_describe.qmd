@@ -21,7 +21,7 @@ The 63 variables can be divided into categories- Patient information includes ge
 A statistical summary of patient information is displayed in table1. Swang1 is the attribute that shows if the patient recieved RHS or not. 
  
 ```{r}
-T1 <- rhc_clean |> mutate(sex = factor(sex),
+T1 <- rhc_aug |> mutate(sex = factor(sex),
                     swang1 = factor(swang1),
                     death = factor(x = death, levels = c(0,1), c("Alive","Dead"))) |> 
   table1(x = formula(~ sex + age + race + swang1 | death),
