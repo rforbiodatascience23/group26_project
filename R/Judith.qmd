@@ -22,6 +22,8 @@ rhc_clean |> select(age, sex, edu, race, income, ninsclas)
 
 For all the variables of interest, we focused on plotting the death distribution of patients and if they had been applied an RHC.
 
+
+
 ## Age
 
 Following plot provides insights into the mortality rates across different ages.
@@ -199,6 +201,8 @@ rhc_clean |>
 ```
 This suggest a potential variation in mortality rates among different racial groups, with the white population having a slightly higher percentage of deaths. Further research would be needed to fully understand and check the underlying reasons for these variations. 
 
+
+Following plot provides insights into the RHC appliance rates across different race.
 ```{r}
 rhc_clean |> 
   ggplot(aes(x = race, 
@@ -275,7 +279,7 @@ rhc_clean |>
   theme_minimal()
 ```
 
-The following chunk shows the corresponding percentage of RHC procedures by income
+The following chunk shows the corresponding percentage of RHC procedures by income.
 ```{r}
 ## Percentage of RHC by income
 rhc_clean |> 
@@ -288,16 +292,13 @@ rhc_clean |>
   select(income, percent)
 ```
 
-
-
-
-
-
-
+This suggests that patients with higher incomes may have better access to healthcare facilities and may be more likely to undergo diagnostic procedures like RHC. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
 
 ## Education
+
+We create a new variable called "edu_group" based on the "edu" variable, allowing for the grouping of individuals into specific years of education ranges.
 ```{r}
 # Create the variable 'edu_group' 
 rhc_clean <- rhc_clean |> 
@@ -306,29 +307,26 @@ rhc_clean <- rhc_clean |>
                          labels = c("<10 years", "between 10-20 years", ">20 years"),
                          include.lowest = TRUE,
                          na.rm = TRUE))
-
-
-rhc_clean |>
-  select(edu_group)
-
 ```
 
 
+Following plot provides insights into the mortality rates across different education groups.
 ```{r}
-#Death by education
-rhc_clean |> 
+# Death in different group of education
+rhc_clean |>
   ggplot(aes(x = edu_group, 
              fill=factor(death))) +
   geom_bar() +
-  labs(title = "Death in education",
-       x = "Income",
-       y = "Count",
-       fill = "Death")
+  labs(title = "Death by Education",
+       x = "Years of eduaction",
+       y = "Number of patients") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
 ```
 
-
+The following chunk is a representation of the percentage of deaths by education.
 ```{r}
-## Percentage of DEATH by education
+## Percentage of death by education
 rhc_clean |> 
   group_by(edu_group, death) |> 
   summarize(count = n()) |> 
@@ -339,7 +337,10 @@ rhc_clean |>
   select(edu_group, percent)
 ```
 
+Individuals with higher education levels have slightly higher percentages of deaths. It is possible that individuals with higher education levels may have a higher likelihood of seeking medical attention and being diagnosed with underlying health conditions, which could contribute to the observed higher mortality rates. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
+
+Following plot provides insights into the RHC appliance rates across different education levels.
 ```{r}
 # Count of RHC by Education
 rhc_clean |> 
@@ -348,15 +349,32 @@ rhc_clean |>
   geom_bar() +
   labs(title = "Distribution of Education by RHC Status",
        x = "Education",
-       y = "Count",
-       fill = "RHC Status")
+       y = "Number of patients",
+       fill = "RHC Status") +
+  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  theme_minimal()
 
 ```
 
+The following chunk shows the corresponding percentage of RHC procedures by Education.
+```{r}
+## Percentage of RHC by education
+rhc_clean |> 
+  group_by(edu_group, swang1) |> 
+  summarize(count = n()) |> 
+  group_by(edu_group) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(swang1 == "RHC") |> 
+  select(edu_group, percent)
+```
+
+Individuals with higher education levels have slightly higher percentages of RHC procedures. They may have better access to healthcare, increased health literacy, and a greater understanding of the benefits of diagnostic procedures like RHC. So healthcare providers may be more likely to recommend RHC to patients with higher education levels. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
 ## Medical assurance
 
+Following plot provides insights into the mortality rates across different medical assurance.
 ```{r}
 #Death by medical assurance
 rhc_clean |> 
@@ -365,11 +383,14 @@ rhc_clean |>
   geom_bar() +
   labs(title = "Death in medical assurance",
        x = "Medical assurance",
-       y = "Count",
-       fill = "Death")
+       y = "Number of patients",
+       fill = "Death") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+  
 ```
 
-
+The following chunk is a representation of the percentage of deaths by medical assurance.
 ```{r}
 ## Percentage of DEATH by medical assurance
 rhc_clean |> 
@@ -381,6 +402,10 @@ rhc_clean |>
   filter(death == 1) |> 
   select(ninsclas, percent)
 ```
+Individuals covered by Medicare having the highest percentage of deaths.
+
+
+
 
 ```{r}
 # Count of RHC by Medical Assurance
