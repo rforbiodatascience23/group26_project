@@ -1,21 +1,10 @@
-## Description of the data
 # Load packages
 ```{r}
 library(tidyverse)
 library(table1)
 ```
 
-## copypaste your code snippets that fit for the description Dont delete your original document until we are completely finished, but rename it as __done._DONE Fks. mine is Josefine_DONE.qmd. This way we have a backup if something fucks up
 
-##only write under your own name :)) 
-
-
-Here we will describe the dataset:
-
-- PCA on dataset of all the variables we chose to include to find what variables actually influence the decition of introducitn catherization
-- divide into two catagories, soscioeconomic factors and physical factors: Find when a patient recieves RHC based on different diseases. Find how well the treatment works in terms based on death rate. Does income, edu, insurance, race, (sex?), influence when a patient actually recieves the treatment?
-
-#Josefine
 The dataset we have used comes from Connors et al. (1996): The effectiveness of RHC in the initial care of critically ill patients. It was publicly available on hbiostat.org and downloaded as a cvs file. 
 The dataset contains information about patients admitted to the hospital in order to study the effect of right heart catherization (RHC). There are total of  2184 patients in the "disease" group which recieved RHC and 3551 patients in the "control" group without RHC. The control group was artificially created using a propensity matching score. The dataset contains 5735 rows and 63 columns. 
 
