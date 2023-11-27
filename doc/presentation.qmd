@@ -34,22 +34,11 @@ library(table1)
 
 The analysis was performed on the dataset: Right Heart Catheterization (RHC) Dataset, first analysed Connors \italics(et. al) (1996)
 
-
-Before cleaning and augmentation:
-
-- 5735 patiens 
-
-- 62 attributes
-
-
-After cleaning and augmentation:
-
-- 5612 patiens 
-
-- 53 attributes
-
+It focuses on the procedure right heart catheterization, and has many different variables pertaining to reason for hospitalization and underlying disease, as well as health information about the patients.
 
 Contains patient-, socioeconomic-, physiological-, disease-, and survival information. 
+
+The original study 
 
 
 ```{r}
@@ -77,12 +66,37 @@ rhc_clean <- read_csv(file = "../data/rhc_clean.csv")
 
 We performed our analysis using $\color{red}{\text{Tidyverse}}$. 
 
+:::: {.columns}
 
+::: {.column width="60%"}
 ![](../results/workflow.png){width=60% fig-align="left"}
 
+:::
+
+::: {.column width="40%"}
 
 
+Before cleaning and augmentation:
 
+
+::: {.incremental}
+
+- 5735 patients
+- 62 attributes
+
+:::
+
+After cleaning and augmentation:
+
+::: {.incremental}
+- 5612 patients 
+
+- 53 attributes
+:::
+
+:::
+
+::::
 
 
 <!--# ---------------------------------------------------------------------- -->
