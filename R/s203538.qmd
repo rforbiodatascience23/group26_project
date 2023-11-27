@@ -19,38 +19,22 @@ convert_RHC <- function(df) {
 
 ```
 
-
+To get a quick overview of some the variables in the dataset we can plot some very simple plots. We start out by visualizing sex against the age, and color by the death column,
 ```{r}
 #| label: plot-sex-against-age
 rhc_clean |> 
-  ggplot(aes(x = age, y = sex, color = death)) +
+  ggplot(aes(x = age, 
+             y = sex, 
+             color = death)) +
   geom_point()
-```
 
-```{r}
-#| label: plot-surv-rate-vs-Cardi-Comor
-# Assuming 'Cardiohx' is a binary indicator for cardiovascular comorbidity
-rhc_aug |> 
-  group_by(cardiohx) |> 
-  summarise(survival_rate = mean(death)) |> 
-  ggplot(aes(x = factor(cardiohx), 
-             y = survival_rate, 
-             fill = factor(cardiohx))) +
-  geom_bar(stat = "identity") +
-  labs(title = "Survival Rate by severe Cardiovascular Comorbidity",
-       x = "Cardiovascular Comorbidity", 
-       y = "Survival Rate") +
-  guides(fill = guide_legend(title = "Disease Status"))
-
-rhc_aug |> 
-  group_by(Diagnosis) |> 
-  count()
 
 ```
+It is now seen here that there is no apparent pattern for death based on the sex against age plot above. 
 
-
+Another thing that we might want visualize is the mean blood pressure as 
 ```{r}
-#| label: meanbp-across-diagnosis-non-filtered
+#| label: meanbp-against-diagnosis-non-filtered
 #| echo: false
 #| output: false
 rhc_aug |> 
@@ -150,10 +134,12 @@ rhc_clean |>
   geom_point(aes(color = cat1),
              position = position_dodge(0.8), 
              alpha = 0.5) +
-  #geom_violin(alpha = 0.35, outlier.shape = NA) +
-  geom_boxplot(alpha = 0.35, 
-               outlier.shape = NA) +
-  labs(title = "Mean blood pressure across all primary diseases",
+  geom_violin(alpha = 0.35, outlier.shape = NA) +
+  #geom_boxplot(alpha = 0.35, 
+               #outlier.shape = NA) +
+  scale_y_continuous(breaks = c(0, 50, 100, 150, 200),
+                     labels = c(0, 50, 100, 150, 200)) +
+  labs(title = "Meanbp against primary diseases",
        x = "Primary disease category",
        y = "Mean blood pressure",
        color = "Primary Disease Category") +

@@ -23,6 +23,11 @@ quarto::quarto_render(input = "01_load.qmd",
 ```
 ## Clean Data
 {{< include 02_clean.qmd >}}
+```{r}
+quarto::quarto_render(input = "02_clean.qmd", 
+                      output_format = "html",
+                      output_file = "../results/02_clean.html")
+```
 ## Augment Data
 ## Description
 ## Analysis 1
