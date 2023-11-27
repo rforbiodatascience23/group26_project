@@ -188,8 +188,7 @@ Comorbidities_risk <- rhc_aug |> mutate(death = factor(x = death,
        y = "Number of Patients") +
   scale_fill_manual(name = "Death", 
                     values = c("No" = "darkolivegreen2", 
-                               "Yes" = "red")) +
-  theme_minimal()
+                               "Yes" = "red"))
 
 ggsave(filename = "Comorbidities_risk.png",
        plot = Comorbidities_risk,
