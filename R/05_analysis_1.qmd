@@ -464,15 +464,24 @@ ggsave(filename = "death_count.png",
 
 ### How many people under $11k have private and how many have Medicare?
 ```{r}
-rhc_aug |> 
+income_medicalinsurance <- rhc_aug |> 
   ggplot(aes(x = income, 
              fill = factor(ninsclas))) +
   geom_bar() +
   labs(title = "Income by Medical Assurance",
        x = "Income",
-       y = "Number of patients",
+       y = "Number of Patients",
        fill = "Medical Insurance") +
   theme_minimal()
+
+income_medicalinsurance
+
+ggsave(filename = "income_medicalinsurance.png",
+       plot = income_medicalinsurance,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
 ```
 ```{r}
 rhc_aug |> 
