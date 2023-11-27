@@ -1,4 +1,18 @@
-
+---
+title: "Group 26 - Project"
+author: 
+- "Carl Felix Freiesleben - s203521"
+- "Emilie Munk - s203538"
+- "Josefine Løken - s183784"
+- "Judith Tierno Martí - s222869"
+- "Sahand Yazdani - s203538"
+format:
+  html: 
+    embed-resources: true
+execute: 
+  message: FALSE
+  warning: FALSE
+---
 ```{r}
 library(tidyverse)
 library(base)
@@ -136,10 +150,8 @@ meanbp_plot <- rhc_aug |>
   geom_point(aes(color = cat1),
              position = position_dodge(0.8), 
              alpha = 0.5) +
-  geom_violin(alpha = 0.5,
-              outlier.shape = NA) +
-  #geom_boxplot(alpha = 0.35, 
-               #outlier.shape = NA) +
+  geom_boxplot(alpha = 0.35, 
+               outlier.shape = NA) +
   scale_y_continuous(breaks = c(0, 50, 100, 150, 200),
                      labels = c(0, 50, 100, 150, 200)) +
   labs(title = "Mean Blood Preassue Against Primary Diseases",

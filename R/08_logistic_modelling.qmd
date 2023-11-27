@@ -1,7 +1,17 @@
 ---
-title: "Logistic modelling"
-format: html
-editor: visual
+title: "Group 26 - Project"
+author: 
+- "Carl Felix Freiesleben - s203521"
+- "Emilie Munk - s203538"
+- "Josefine Løken - s183784"
+- "Judith Tierno Martí - s222869"
+- "Sahand Yazdani - s203538"
+format:
+  html: 
+    embed-resources: true
+execute: 
+  message: FALSE
+  warning: FALSE
 ---
 
 ## Logistic modelling
@@ -13,6 +23,7 @@ Usually this ranges from 0-71, but in this data set the min and max are 3-147, t
 We wish to model what scores indicates death and what scores indicate you will survive for the APACHE score.
 
 As the value death is a binary value we choose the logistic binomial model to try and fit the data.
+
 
 ```{r}
 library(tidyverse)
