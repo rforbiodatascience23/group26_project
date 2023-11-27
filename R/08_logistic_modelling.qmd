@@ -52,7 +52,9 @@ aps1_card_model <- glm(formula = death ~ aps1,
 aps1_card_model
 ```
 
-The intercept means that each time the APACHE score increases by one, the chance of dying increases with e\^2,5 this is roughly 2.5%.
+The intercept means that each time the APACHE score increases by one, the chance of dying increases with 1/(1 + exp(-(-0.75407 + 0.02571 \* x))).
+
+An example is that for an APACHE score of 71 the risk of dying of cardiac disease is 74%.
 
 ```{r}
 aps1_card_model |> 
@@ -159,12 +161,41 @@ model_estimates <- aps1_estimates |>
        y='Diseases',
        title = 'The estimated rise in the risk of dying by increase in the APACHE score')
 
-ggsave("../results/model_estimates.png", model_estimates)
+ggsave(filename = "model_estimates.png",
+       plot = model_estimates,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
 
 model_estimates
 ```
 
 The higher the estimate, the higher the risk of dying is by each rise in the APACHE score, the risk of dying increases with e\^estimate.
+
+```{r}
+model_estimates_2 <- aps1_estimates |>
+  filter(term=='(Intercept)') |> 
+  ggplot(mapping = aes(x = estimate,
+                       y = fct_reorder(Diagnosis,
+                                       estimate))) +
+  geom_point(aes(color=is_significant)) +
+  geom_errorbarh(aes(xmin = conf.low, 
+                     xmax = conf.high, color=is_significant)) +
+  geom_vline(xintercept = 0) +
+  labs(x='Estimates(95% CIs)', 
+       y='Diseases',
+       title = 'The estimated dying when the APACHE score is 0')
+
+ggsave(filename = "model_estimates_2.png",
+       plot = model_estimates_2,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
+
+model_estimates_2
+```
 
 ```{r}
 
@@ -179,17 +210,5 @@ coefficients<-aps1_estimates |>
 model_variables<- 
   inner_join(coefficients, intercepts, by = "Diagnosis")
 
-model_variables
 
-```
-
-```{r}
-rhc_aug |>
-  group_by(Diagnosis) |> 
-  ggplot(aes(x = aps1 , y =death ))+
-  facet_wrap(~Diagnosis)+
-  geom_smooth(method='glm', 
-              method.args = list(family = "binomial"), 
-              formula = y ~ 1/(1 + exp(-(estimate.y + estimate.x * x))))
-  
 ```
