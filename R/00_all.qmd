@@ -13,68 +13,89 @@ execute:
   message: TRUE
   warning: TRUE
 ---
+```{r}
+library(quarto)
+```
 
 ## Load Data
 {{< include 01_load.qmd >}}
 ```{r}
-quarto::quarto_render(input = "01_load.qmd", 
-                      output_format = "html",
-                      output_file = "../results/01_load.html")
+quarto::quarto_render(input = "01_load.qmd",
+                      output_format = "html")
+
+file.rename(from = "01_load.html",
+            to = "../results/01_load.html")
 ```
 ## Clean Data
 {{< include 02_clean.qmd >}}
 ```{r}
 quarto::quarto_render(input = "02_clean.qmd", 
-                      output_format = "html",
-                      output_file = "../results/02_clean.html")
+                      output_format = "html")
+
+file.rename(from = "02_clean.html",
+            to = "../results/02_clean.html")
 ```
 ## Augment Data
 {{< include 03_aug.qmd >}}
 ```{r}
 quarto::quarto_render(input = "03_aug.qmd", 
-                      output_format = "html",
-                      output_file = "../results/03_aug.html")
+                      output_format = "html")
+
+file.rename(from = "03_aug.html",
+            to = "../results/03_aug.html")
 ```
 ## Description
 {{< include 04_describe.qmd >}}
 ```{r}
 quarto::quarto_render(input = "04_describe.qmd", 
-                      output_format = "html",
-                      output_file = "../results/04_describe.html")
+                      output_format = "html")
+
+file.rename(from = "04_describe.html",
+            to = "../results/04_describe.html")
 ```
 ## Analysis 1
 {{< include 05_analysis_1.qmd >}}
 ```{r}
 quarto::quarto_render(input = "05_analysis_1.qmd", 
-                      output_format = "html",
-                      output_file = "../results/05_analysis_1.html")
+                      output_format = "html")
+
+file.rename(from = "05_analysis_1.html",
+            to = "../results/05_analysis_1.html")
 ```
 ## Analysis 2
 {{< include 06_analysis_2.qmd >}}
 ```{r}
-quarto::quarto_render(input = "06_analysis_2.qmd", 
-                      output_format = "html",
-                      output_file = "../results/06_analysis_2.html")
+quarto::quarto_render(input = "06_analysis_2.qmd",
+                      output_format = "html")
+
+file.rename(from = "06_analysis_2.html",
+            to = "../results/06_analysis_2.html")
 ```
 ## PCA
 {{< include 07_PCA.qmd >}}
 ```{r}
-quarto::quarto_render(input = "07_PCA.qmd", 
-                      output_format = "html",
-                      output_file = "../results/07_PCA.html")
+quarto::quarto_render(input = "07_PCA.qmd",
+                      output_format = "html")
+
+file.rename(from = "07_PCA.html",
+            to = "../results/07_PCA.html")
 ```
 ## Logistic Modelling
 {{< include 08_logistic_modelling.qmd >}}
 ```{r}
-quarto::quarto_render(input = "08_logistic_modelling.qmd", 
-                      output_format = "html",
-                      output_file = "../results/08_logistic_modelling.html")
+quarto::quarto_render(input = "08_logistic_modelling.qmd",
+                      output_format = "html")
+
+file.rename(from = "08_logistic_modelling.html",
+            to = "../results/08_logistic_modelling.html")
 ```
 ## Functions
 {{< include 99_functions.qmd >}}
 ```{r}
-quarto::quarto_render(input = "99_functions.qmd", 
-                      output_format = "html",
-                      output_file = "../results/99_functions.html")
+quarto::quarto_render(input = "99_functions.qmd",
+                      output_format = "html")
+
+file.rename(from = "99_functions.html",
+            to = "../results/99_functions.html")
 ```
 
