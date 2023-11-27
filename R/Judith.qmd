@@ -99,10 +99,10 @@ rhc_clean |>
   group_by(age_group) |> 
   mutate(percent = count / sum(count) * 100) |> 
   ungroup() |> 
-  filter(swang1 == "No RHC") |> 
+  filter(swang1 == "RHC") |> 
   select(age_group, percent)
 ```
-This results suggests that younger patients (10-20 age group) and older patients (> 90 age group) may have higher rates of RHC procedures, potentially due to specific cardiac conditions or clinical indications. Conversely, middle-aged patients (40-50 and 60-70 age groups) may have lower rates of RHC procedures, indicating a different clinical approach or lower prevalence of conditions requiring RHC. Further research would be needed to understand the underlying reasons for these variations and fully evaluate the appropriateness of RHC procedures.
+This results suggests that middle-aged patients (40-50 and 60-70 age groups) may have higher rates of RHC procedures, potentially due to specific cardiac conditions or clinical indications. Conversely, patients (10-20 age group) and older (> 90 age group) may have lower rates of RHC procedures, indicating a different clinical approach or lower prevalence of conditions requiring RHC. Further research would be needed to understand the underlying reasons for these variations and fully evaluate the appropriateness of RHC procedures.
 
 
 ## Gender
@@ -162,14 +162,15 @@ rhc_clean |>
   group_by(sex) |> 
   mutate(percent = count / sum(count) * 100) |> 
   ungroup() |> 
-  filter(swang1 == "No RHC") |> 
+  filter(swang1 == "RHC") |> 
   select(sex, percent)
 ```
-This suggest a potential difference in RHC utilization between females and males, with females having a slightly higher percentage of RHC procedures. Further research would be needed to fully understand and check the underlying reasons for these variations. 
+This suggest a potential difference in RHC utilization between females and males, with males having a slightly higher percentage of RHC procedures. Further research would be needed to fully understand and check the underlying reasons for these variations. 
 
 
 ## Race
 
+Following plot provides insights into the mortality rates across different races.
 ```{r}
 #Death by race
 rhc_clean |> 
@@ -179,10 +180,12 @@ rhc_clean |>
   labs(title = "Death in race",
        x = "Race",
        y = "Count",
-       fill = "Death")
+       fill = "Death") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
 ```
 
-
+The following chunk is a representation of the percentage of deaths by race.
 ```{r}
 # Percentage of death by race
 rhc_clean |> 
@@ -194,37 +197,57 @@ rhc_clean |>
   filter(death == 1) |> 
   select(race, percent)
 ```
+This suggest a potential variation in mortality rates among different racial groups, with the white population having a slightly higher percentage of deaths. Further research would be needed to fully understand and check the underlying reasons for these variations. 
 
 ```{r}
-# Count of RHC by race
 rhc_clean |> 
   ggplot(aes(x = race, 
              fill = as.factor(swang1))) +
   geom_bar() +
   labs(title = "Distribution of Race by RHC Status",
        x = "Race",
-       y = "Count",
-       fill = "RHC Status")
+       y = "Number of patients",
+       fill = "RHC Status") +
+  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  theme_minimal()
 ```
+
+The following chunk shows the corresponding percentage of RHC procedures by race.
+```{r}
+## Percentage of RHC by race
+rhc_clean |> 
+  group_by(race, swang1) |> 
+  summarize(count = n()) |> 
+  group_by(race) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(swang1 == "RHC") |> 
+  select(race, percent)
+```
+
+These findings suggest a potential variation in RHC utilization among different racial groups, with the other racial category having the highest percentage of RHC procedures. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
 ## Income
 
+Following plot provides insights into the mortality rates across different patients' incomes.
 ```{r}
 #Death by income
 rhc_clean |> 
   ggplot(aes(x = income, 
              fill=factor(death))) +
   geom_bar() +
-  labs(title = "Death in income",
+  labs(title = "Death by Income",
        x = "Income",
-       y = "Count",
-       fill = "Death")
+       y = "Number of patients",
+       fill = "Death") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
 ```
 
-
+The following chunk is a representation of the percentage of deaths by income.
 ```{r}
-## Percentage of DEATH by income
+## Percentage of death by income
 rhc_clean |> 
   group_by(income, death) |> 
   summarize(count = n()) |> 
@@ -235,18 +258,43 @@ rhc_clean |>
   select(income, percent)
 ```
 
+This suggest that the lowest income category have the highest percentage of deaths. However, it is important to note that the differences are relatively small and may not be statistically significant. Further research would be needed to fully understand and check the underlying reasons for these variations.
+
 
 ```{r}
 # Count of RHC by income
 rhc_clean |> 
   ggplot(aes(x = income, 
-           fill = as.factor(swang1))) +
+             fill = as.factor(swang1))) +
   geom_bar() +
   labs(title = "Distribution of Income by RHC Status",
        x = "Income",
-       y = "Count",
-       fill = "RHC Status")
+       y = "Number of patients",
+       fill = "RHC Status") +
+  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  theme_minimal()
 ```
+
+The following chunk shows the corresponding percentage of RHC procedures by income
+```{r}
+## Percentage of RHC by income
+rhc_clean |> 
+  group_by(income, swang1) |> 
+  summarize(count = n()) |> 
+  group_by(income) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(swang1 == "RHC") |> 
+  select(income, percent)
+```
+
+
+
+
+
+
+
+
 
 
 ## Education
