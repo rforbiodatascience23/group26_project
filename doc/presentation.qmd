@@ -67,6 +67,10 @@ rhc_clean <- read_csv(file = "../data/rhc_clean.csv")
 We performed our analysis using $\color{red}{\text{Tidyverse}}$. 
 
 
+![](../results/workflow.png){width=60% fig-align="left"}
+
+
+
 
 
 
@@ -95,35 +99,53 @@ rhc_clean |> mutate(sex = factor(sex),
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Investigating the mean blood pressure of the patients admitted with different diseases
+## Investigating the mean blood pressure with different diseases
 
 :::: {.columns}
 
-::: {.column width="50%"}
-![](../results/meanbp_plot.png){width=90% fig-align="right"}
-::: {.column width="50%"}
+::: {.column width="80%"}
 
-::: {.column width="50%"}
-Violin plot $\rightarrow$ Multimodal / Bimodal distribution
+![](../results/meanbp_plot.png){width=60% fig-align="left"}
+:::
+
+::: {.column width="20%"}
+
+::: {.incremental}
+
+- First item
+- Second item
+
+:::
 
 
-::: {.column width="50%"}
+:::
 
-
-
-:::: {.columns}
+::::
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Plots
+## How Your Medical Insurance Influences Your Survival Chances
 
 :::: {.columns}
 
-![](../results/death_count.png){width=90% fig-align="right"}
+::: {.column width="80%"}
+![](../results/death_count.png){width=60% fig-align="left"}
+:::
+
+::: {.column width="20%"}
+
+::: {.incremental}
+
+- First item
+- Second item
+
+:::
 
 
-:::: {.columns}
+:::
+
+::::
 
 
 
