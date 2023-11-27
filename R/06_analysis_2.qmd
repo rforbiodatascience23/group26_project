@@ -177,17 +177,27 @@ subHX |> mutate(values = factor(values)) |>
 
 We begin by exploring if the number of comorbidity diseases influence the risk of death.
 ```{r}
-rhc_aug |>
+Comorbidities_risk <- rhc_aug |> mutate(death = factor(x = death, 
+                         levels = c(0,1), 
+                         c("No","Yes"))) |> 
   ggplot(aes(x = comorbidities, 
              fill = factor(death))) +
   geom_bar(position = "stack") +
-  labs(title = "Risk of dying by number of comorbidities",
-       x = "Number of comorbidities",
-       y = "Number of patients") +
+  labs(title = "Risk of Dying by Number of Comorbidities",
+       x = "Number of Comorbidities",
+       y = "Number of Patients") +
   scale_fill_manual(name = "Death", 
-                    values = c("0" = "blue", 
-                               "1" = "red")) +
+                    values = c("No" = "darkolivegreen2", 
+                               "Yes" = "red")) +
   theme_minimal()
+
+ggsave(filename = "Comorbidities_risk.png",
+       plot = Comorbidities_risk,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
+
 ```
 
 
