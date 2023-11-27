@@ -12,17 +12,10 @@ library(dplyr)
 library(table1)
 ```
 
-```{r}
-rhc_clean
-```
-
 Does the number of comorbidity diseases influence the risk of death?
 
 ```{r}
-rhc_clean |>
-  rowwise() |> 
-  mutate(comorbidities=sum(c_across(cardiohx:amihx))) |> 
-  
+rhc_aug |>
   ggplot(aes(x = comorbidities, fill=factor(death))) +
   geom_bar(position = "stack") +
   labs(title = "Risk of dying by number of comorbidities",
@@ -33,9 +26,7 @@ rhc_clean |>
 ```
 
 ```{r}
-rhc_clean |>
-  rowwise() |> 
-  mutate(comorbidities=sum(c_across(cardiohx:amihx))) |> 
+rhc_aug |>
   ggplot(aes(x = comorbidities, fill=factor(death))) +
   facet_wrap(~swang1)+
   geom_bar(position = "stack") +
@@ -44,26 +35,4 @@ rhc_clean |>
        y = "Number of patients") +
   scale_fill_manual(name= "Survival", values = c("0" = "#619CFF", "1" = "#F8766D"), labels= c('Dead', 'Alive')) +
   theme_minimal()
-```
-
-```{r}
-
-#| label: function-for-words-to-binary
-# Creating a generel function that can be used for yes and no columns
-create_binary_column <- function(x) {
-  ifelse(x == "Yes", 1, 
-  ifelse(x == "No", 0, x))
-}
-rhc_clean |>
-    
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |>
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values")|> 
-  filter(Values==1) 
-   
-
- 
-
 ```
