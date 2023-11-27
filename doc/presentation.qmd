@@ -118,6 +118,13 @@ Violin plot $\rightarrow$ Multimodal / Bimodal distribution
 <!--# ---------------------------------------------------------------------- -->
 ## Plots
 
+:::: {.columns}
+
+![](../results/death_count.png){width=90% fig-align="right"}
+
+
+:::: {.columns}
+
 
 
 <!--# ---------------------------------------------------------------------- -->
