@@ -34,15 +34,17 @@ library(table1)
 
 The analysis was performed on the dataset: Right Heart Catheterization (RHC) Dataset, first analysed Connors \italics(et. al) (1996)
 
-It focuses on the effect RHC has on the patients
 
-Used propensity score matching to create an artificial control group
-
-
-Their study found that patients undergoing RHC experienced shorter survival times.
+- It focuses on the effect RHC has on the patients
 
 
-Attribute datta includes patient demographics, socioeconomic details, physiological parameters, disease-related information, and survival outcomes.
+- Used propensity score matching to create an artificial control group
+
+
+- Their study found that patients undergoing RHC experienced shorter survival times.
+
+
+- Attribute datta includes patient demographics, socioeconomic details, physiological parameters, disease-related information, and survival outcomes.
 
 ```{r}
 #| echo: false
@@ -50,7 +52,7 @@ Attribute datta includes patient demographics, socioeconomic details, physiologi
 #| message: false
 #| warning: false
 
-rhc_clean <- read_csv(file = "../data/rhc_clean.csv")
+rhc_aug <- read_csv(file = "../data/rhc_aug.csv")
 
 ```
 
@@ -83,8 +85,8 @@ We performed our analysis using $\color{red}{\text{Tidyverse}}$.
 Before cleaning and augmentation:
 
 
-
 - 5735 patients
+
 - 62 attributes
 
 
@@ -105,6 +107,18 @@ After cleaning and augmentation:
 <!--# ---------------------------------------------------------------------- -->
 ## Materials and Methods (exploratory dataviz)
 
+Familiarize ourselves with the data by extracting different information about the attributes and made numerous plots
+
+Created summaries of different attributes, to find what makes sense to analyse 
+
+```{r}
+rhc_aug |> group_by(swang1, death) |> summarise(n = n())
+```
+
+We used histograms because they are easy to read and interperate, while also showing a lot of information
+
+*insert 2 small images as examples
+
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
@@ -113,7 +127,7 @@ After cleaning and augmentation:
 #| echo: true
 #| eval: true
 
-rhc_clean |> mutate(sex = factor(sex),
+rhc_aug |> mutate(sex = factor(sex),
                     swang1 = factor(swang1),
                     death = factor(x = death, levels = c(0,1), c("Alive","Dead"))) |> 
   table1(x = formula(~ sex + age + race + swang1 | death),
