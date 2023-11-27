@@ -15,23 +15,16 @@ library(table1)
 colnames(rhc_clean)
 ```
 
+The variables that we found to be interesting to analyze from a socioeconomic perspective are: 
 ```{r}
-rhc_clean |> select(age, sex, edu, race, income)
+rhc_clean |> select(age, sex, edu, race, income, ninsclas)
 ```
+
+For all the variables of interest, we focused on plotting the death distribution of patients and if they had been applied an RHC.
+
 ## Age
 
-```{r}
-# Histogram of Age
-rhc_clean |>
-  ggplot(aes(x = age)) +
-  geom_histogram(binwidth = 5,
-                 fill = "skyblue", color = "black") +
-  labs(title = "Distribution of Age",
-       x = "Age",
-       y = "Frequency") +
-  theme_minimal()
-
-```
+Following plot provides insights into the mortality rates across different ages.
 ```{r}
 # Death in different ages
 rhc_clean |>
@@ -41,27 +34,80 @@ rhc_clean |>
   labs(title = "Death in different ages",
        x = "Age",
        y = "Number of patients") +
-  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 
-
+```
+We create a new variable called "age_group" based on the "age" variable, allowing for the grouping of individuals into specific age ranges.
+```{r}
+rhc_clean <- rhc_clean |> 
+  mutate(age_group = cut(age, breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, Inf), 
+                         labels = c("<10", "10-20", "20-30", "30-40", "40-50", "50-60", "60-70", "70-80", "80-90", "> 90")))
 
 ```
-
+Following plot provides insights into the mortality rates across different age groups.
 ```{r}
-## Percentage of DEATH by age
+# Death in different group ages
+rhc_clean |>
+  ggplot(aes(x = age_group, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "Death in different ages",
+       x = "Age",
+       y = "Number of patients") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+```
+
+The following chunk is a representation of the percentage of deaths by age group.
+```{r}
+## Percentage of death by age
 rhc_clean |> 
-  group_by(age, death) |> 
+  group_by(age_group, death) |> 
   summarize(count = n()) |> 
-  group_by(age) |> 
+  group_by(age_group) |> 
   mutate(percent = count / sum(count) * 100) |> 
   ungroup() |> 
   filter(death == 1) |> 
-  select(age, percent)
+  select(age_group, percent)
 ```
+Several observations can be made. Firstly, it becomes apparent that mortality rates increase with advancing age. This finding aligns with existing knowledge that older individuals generally have a higher risk of experiencing adverse health outcomes. Secondly, the plot demonstrates that the number of deaths is relatively higher in certain age brackets, indicating the presence of age-specific vulnerabilities. Further research would be needed to fully understand the underlying reasons for these variations.
+
+
+Following plot provides insights into the RHC appliance rates across different age groups.
+```{r}
+# Count of RHC by age
+rhc_clean |> 
+  ggplot(aes(x = age_group, 
+             fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Age by RHC Status",
+       x = "Age",
+       y = "Count",
+       fill = "RHC Status") +
+  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  theme_minimal()
+  
+```
+
+The following chunk shows the corresponding percentage of RHC procedures for each age group.
+```{r}
+## Percentage of RHC by age_group
+rhc_clean |> 
+  group_by(age_group, swang1) |> 
+  summarize(count = n()) |> 
+  group_by(age_group) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(swang1 == "No RHC") |> 
+  select(age_group, percent)
+```
+This results suggests that younger patients (10-20 age group) and older patients (> 90 age group) may have higher rates of RHC procedures, potentially due to specific cardiac conditions or clinical indications. Conversely, middle-aged patients (40-50 and 60-70 age groups) may have lower rates of RHC procedures, indicating a different clinical approach or lower prevalence of conditions requiring RHC. Further research would be needed to understand the underlying reasons for these variations and fully evaluate the appropriateness of RHC procedures.
+
 
 ## Gender
 
+Following plot provides insights into the mortality rates across different genders.
 ```{r}
 # Death females vs. males
 rhc_clean |>
@@ -71,23 +117,14 @@ rhc_clean |>
   labs(title = "Death females vs. males",
        x = "Gender",
        y = "Number of patients") +
-  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
-```{r}
-## Percentage of DEATH by gender
-# rhc_clean |>
-#   ggplot(aes(x = sex, 
-#            fill = factor(death))) +
-#   geom_bar(position = "fill", 
-#            stat = "count") +
-#   labs(title = "Percentage of Death in Females vs. Males",
-#        x = "Gender",
-#        y = "Percentage of patients",
-#        fill = "Death Status") +
-#   scale_y_continuous(labels = scales::percent_format()) +
-#   theme_minimal()
 
+
+The following chunk is a representation of the percentage of deaths by gender.
+```{r}
+# Percentage of death by gender
 rhc_clean |> 
   group_by(sex, death) |> 
   summarize(count = n()) |> 
@@ -96,22 +133,45 @@ rhc_clean |>
   ungroup() |> 
   filter(death == 1) |> 
   select(sex, percent)
-
 ```
+This results suggest that there may be a slight difference in mortality rates between females and males, with males having a slightly higher percentage of deaths. However, it is important to note that the difference is relatively small and may not be statistically significant. Further research would be needed to fully understand and check the underlying reasons for these variations.
+
+
+
+Following plot provides insights into the RHC appliance rates across different genders.
+```{r}
+# Count of RHC by gender
+rhc_clean |> 
+  ggplot(aes(x = sex, 
+             fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Gender by RHC Status",
+       x = "Gender",
+       y = "Number of patients",
+       fill = "RHC Status") +
+  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  theme_minimal()
+```
+
+The following chunk shows the corresponding percentage of RHC procedures for each gender.
+```{r}
+## Percentage of RHC by gender
+rhc_clean |> 
+  group_by(sex, swang1) |> 
+  summarize(count = n()) |> 
+  group_by(sex) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(swang1 == "No RHC") |> 
+  select(sex, percent)
+```
+This suggest a potential difference in RHC utilization between females and males, with females having a slightly higher percentage of RHC procedures. Further research would be needed to fully understand and check the underlying reasons for these variations. 
+
+
 ## Race
 
 ```{r}
-rhc_clean |> 
-  ggplot(aes(x = race, 
-             fill = as.factor(swang1))) +
-  geom_bar() +
-  labs(title = "Distribution of Race by RHC Status",
-       x = "Race",
-       y = "Count",
-       fill = "RHC Status")
-```
-
-```{r}
+#Death by race
 rhc_clean |> 
   ggplot(aes(x = race, 
              fill=factor(death))) +
@@ -121,8 +181,10 @@ rhc_clean |>
        y = "Count",
        fill = "Death")
 ```
+
+
 ```{r}
-## Percentage of DEATH by race
+# Percentage of death by race
 rhc_clean |> 
   group_by(race, death) |> 
   summarize(count = n()) |> 
@@ -133,29 +195,34 @@ rhc_clean |>
   select(race, percent)
 ```
 
-## Income
-
 ```{r}
+# Count of RHC by race
 rhc_clean |> 
-  ggplot(aes(x = income, 
-           fill = as.factor(swang1))) +
+  ggplot(aes(x = race, 
+             fill = as.factor(swang1))) +
   geom_bar() +
-  labs(title = "Distribution of Income by RHC Status",
-       x = "Income",
+  labs(title = "Distribution of Race by RHC Status",
+       x = "Race",
        y = "Count",
        fill = "RHC Status")
 ```
 
+
+## Income
+
 ```{r}
+#Death by income
 rhc_clean |> 
   ggplot(aes(x = income, 
-             fill = factor(death))) +
+             fill=factor(death))) +
   geom_bar() +
-  labs(title = "Distribution of Income by Death",
+  labs(title = "Death in income",
        x = "Income",
        y = "Count",
        fill = "Death")
 ```
+
+
 ```{r}
 ## Percentage of DEATH by income
 rhc_clean |> 
@@ -169,18 +236,59 @@ rhc_clean |>
 ```
 
 
+```{r}
+# Count of RHC by income
+rhc_clean |> 
+  ggplot(aes(x = income, 
+           fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Income by RHC Status",
+       x = "Income",
+       y = "Count",
+       fill = "RHC Status")
+```
+
+
 ## Education
 ```{r}
-#'edu_group' based on the cut function
-rhc_clean$edu_group <- cut(rhc_clean$edu, 
-                           breaks = c(-Inf, 10, 20, Inf), 
-                           labels = c("<10 years", "between 10-20 years", ">20 years"), 
-                           include.lowest = TRUE,
-                           na.rm = TRUE)
+# Create the variable 'edu_group' 
+rhc_clean <- rhc_clean |> 
+  mutate(edu_group = cut(edu,
+                         breaks = c(-Inf, 10, 20, Inf), 
+                         labels = c("<10 years", "between 10-20 years", ">20 years"),
+                         include.lowest = TRUE,
+                         na.rm = TRUE))
 
-# rhc_clean |> 
-#   select(edu_group)
 
+rhc_clean |>
+  select(edu_group)
+
+```
+
+
+```{r}
+#Death by education
+rhc_clean |> 
+  ggplot(aes(x = edu_group, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "Death in education",
+       x = "Income",
+       y = "Count",
+       fill = "Death")
+```
+
+
+```{r}
+## Percentage of DEATH by education
+rhc_clean |> 
+  group_by(edu_group, death) |> 
+  summarize(count = n()) |> 
+  group_by(edu_group) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(death == 1) |> 
+  select(edu_group, percent)
 ```
 
 
@@ -196,18 +304,35 @@ rhc_clean |>
        fill = "RHC Status")
 
 ```
+
+
+
+## Medical assurance
+
 ```{r}
-## Percentage of DEATH by education
+#Death by medical assurance
 rhc_clean |> 
-  group_by(edu_group, death) |> 
+  ggplot(aes(x = ninsclas, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "Death in medical assurance",
+       x = "Medical assurance",
+       y = "Count",
+       fill = "Death")
+```
+
+
+```{r}
+## Percentage of DEATH by medical assurance
+rhc_clean |> 
+  group_by(ninsclas, death) |> 
   summarize(count = n()) |> 
-  group_by(edu_group) |> 
+  group_by(ninsclas) |> 
   mutate(percent = count / sum(count) * 100) |> 
   ungroup() |> 
   filter(death == 1) |> 
-  select(edu_group, percent)
+  select(ninsclas, percent)
 ```
-## Medical assurance
 
 ```{r}
 # Count of RHC by Medical Assurance
@@ -215,12 +340,13 @@ rhc_clean |>
   ggplot(aes((x = ninsclas), 
              fill = as.factor(swang1))) +
   geom_bar() +
-  labs(title = "Distribution of Education by RHC Status",
-       x = "Education",
+  labs(title = "Distribution of Medical assurance by RHC Status",
+       x = "Medical assurance",
        y = "Count",
        fill = "RHC Status")
 
 ```
+
 ```{r}
 ## Percentage of RHC/No RHC by medical assurance
 rhc_clean |> 
@@ -231,37 +357,64 @@ rhc_clean |>
 ```
 
 
-
 ## Others
 
 
 ```{r}
-rhc_clean |> 
-  ggplot(aes(x = as.factor(sex), 
-             y = age, 
-             fill = as.factor(swang1))) +
-  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
-  labs(title = "Average Age by Sex and RHC",
-       x = "Sex",
-       y = "Average Age",
-       fill = "RHC Status")
-
-
-```
-
-
-
-
-```{r}
-# Bar plot for Death by Race and RHC Status
+# Bar plot for Death by income and medical assurance
 rhc_clean |>
-  ggplot(aes(x = race,
-             fill = as.factor(death),
-             group = as.factor(swang1))) +
+  filter(death == 0) |> 
+  ggplot(aes(x = income, 
+             fill = as.factor(death))) +
   geom_bar(position = "dodge") +
-  labs(title = "Death Count by Race and RHC Status",
-       x = "Race",
+  labs(title = "Death Count by Income and Medical Assurance",
+       x = "Income",
        y = "Count",
        fill = "Death status") +
-  facet_wrap(~swang1)
+  facet_wrap(~ninsclas) +
+  # scale_fill_manual(values = c("red", "blue")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+```{r}
+# Bar plot for RHC by income and race
+
+rhc_clean |>
+  # filter(swang1 == 'RHC') |> 
+  ggplot(aes(x = income,
+             fill = as.factor(swang1))) +
+  geom_bar(position = "dodge") +
+  labs(title = "RHC Count by Income and Race",
+       x = "Income",
+       y = "Count") +
+  facet_wrap(~race) +
+  theme_minimal() +
+  # scale_fill_manual(values = c("red", "blue")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Bar plot for RHC by income and medical assurance
+rhc_clean |>
+  ggplot(aes(x = race,
+             fill = as.factor(swang1),
+             group = as.factor(income))) +
+  geom_bar(position = "dodge") +
+  labs(title = "RHC Count by Income and Medical Assurance",
+       x = "Income",
+       y = "Count",
+       fill = "RHC status") +
+  facet_wrap(~income) +
+  theme_minimal() +
+  scale_fill_manual(values = c("red", "blue")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## FINAL PLOTS (ones in the presentation)
+
+
+
+
+
+
