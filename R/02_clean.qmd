@@ -13,7 +13,7 @@ library(ggseqlogo)
 library(dplyr)
 library(table1)
 
-rhc_clean <- read_csv("../data/rhc_clean.csv")
+rhc_data <- read_csv("../data/rhc.csv")
 #| label: Simple-cleaning-chunk-data-wrangling
 #copy paste
 rhc_clean <- rhc_data |> 
