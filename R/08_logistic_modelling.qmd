@@ -157,9 +157,13 @@ model_estimates <- aps1_estimates |>
   geom_errorbarh(aes(xmin = conf.low, 
                      xmax = conf.high, color=is_significant)) +
   geom_vline(xintercept = 0) +
+  scale_color_manual(
+    values = c(no = "darkred", yes = "darkgoldenrod1"),
+  ) +
   labs(x='Estimates(95% CIs)', 
        y='Diseases',
-       title = 'The estimated rise in the risk of dying by increase in the APACHE score')
+       title = 'The estimated rise in the risk of dying by increase in the APACHE score',
+       color = "Significant")
 
 ggsave(filename = "model_estimates.png",
        plot = model_estimates,
@@ -201,14 +205,18 @@ model_estimates_2
 
 intercepts<-aps1_estimates |>   
   filter(term == "(Intercept)") |> 
-  select(Diagnosis, estimate) 
+  select(Diagnosis, estimate, p.value) 
 
 coefficients<-aps1_estimates |>   
   filter(term == "aps1") |> 
   select(Diagnosis, estimate)
 
-model_variables<- 
-  inner_join(coefficients, intercepts, by = "Diagnosis")
+  
 
+model_variables<- 
+  inner_join(coefficients, intercepts, by = "Diagnosis") |> 
+  rename(Intercept=estimate.y) |> 
+  rename(Coefficient=estimate.x)
+model_variables
 
 ```
