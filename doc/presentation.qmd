@@ -31,15 +31,26 @@ library(ggseqlogo)
 library(dplyr)
 library(table1)
 ```
-This is the introduction. All code is loaded here and saved as rhc_aug so this is the data name we will use for all data. Right now we have not included aug data, so we need to do that and then update other chucks that rn use rhc_clean.
-note to self:
-Eval parameter is whether to evaluate/run your chunk of code
-Echo parameter is whether to print the code
+
+The analysis was performed on the dataset: Right Heart Catheterization (RHC) Dataset, first analysed Connors \italics(et. al) (1996)
 
 
-The analysis was performed on the dataset: Right Heart Catheterization Dataset, first analysed Connors \italics(et. al) (1996)
+Before cleaning and augmentation:
 
-It focuses on the procedure right heart catheterization, and has many different variables pertaining to reason for hospitalization and underlying disease, as well as health information about the patients.
+- 5735 patiens 
+
+- 62 attributes
+
+
+After cleaning and augmentation:
+
+- 5612 patiens 
+
+- 53 attributes
+
+
+Contains patient-, socioeconomic-, physiological-, disease-, and survival information. 
+
 
 ```{r}
 #| echo: false
