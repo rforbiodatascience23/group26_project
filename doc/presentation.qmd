@@ -76,7 +76,7 @@ We performed our analysis using $\color{red}{\text{Tidyverse}}$.
 :::: {.columns}
 
 ::: {.column width="60%"}
-![](../results/workflow.png){width=90% fig-align="left"}
+![](../results/import_workflow_8.png){width=90% fig-align="left"}
 
 :::
 
