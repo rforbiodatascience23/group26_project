@@ -6,7 +6,7 @@ editor: visual
 
 ## Logistic modelling
 
-The surv2md1is an estimate of the probability of surviving the first two months after admission to the hospital. The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are usually this ranges from 0-71, but in this data set the min and max are 3-147.
+The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are usually this ranges from 0-71, but in this data set the min and max are 3-147.
 
 We wish to model what scores indicates death and what scores indicate you will survive for the two different scores.
 
@@ -25,7 +25,7 @@ library(purrr)
 ```
 
 ```{r}
-rhc_clean |> 
+rhc_aug |> 
   select(ptID, aps1, death) |> 
   ggplot(aes(x = aps1, fill=factor(death))) +
   geom_bar(position = "stack") 
@@ -34,61 +34,15 @@ rhc_clean |>
 ```
 
 ```{r}
-rhc_clean |> 
-  select(ptID, aps1, death) |> 
-   mutate(aps1_Interval = cut(aps1, breaks = c(0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150), labels = c("0-10", "10-20", "20-30", "30-40", "40-50","50-60", "60-70", "70-80", "80-90", "90-100","100-110", "110-120", "120-130", "130-140", "140-150"))) |> 
-  
-ggplot(aes(x = aps1_Interval, fill=factor(death))) +
+rhc_aug |> 
+  select(ptID, aps1_Interval, death) |> 
+  ggplot(aes(x = aps1_Interval, fill=factor(death))) +
   geom_bar(position = "stack") 
-  
+
   
 ```
 
 It looks like there might be a correlation between a higher aps1 score and dying.we will now try and model this.
-
-```{r}
-  #| label: function-for-words-to-binary
-# Creating a generel function that can be used for yes and no columns
-create_binary_column <- function(x) {
-  ifelse(x == "Yes", 1, 
-  ifelse(x == "No", 0, x))
-}
-
-#Creates one column with all diseases that is reason for admission to the hospital
-c1<- rhc_clean |>
-    
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |>
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values")|> 
-  filter(Values==1) |> 
-  
-   group_by(ptID) |> 
-  mutate(Diagnosis = paste(unique(Diagnosis), collapse = ",")) 
-  
-
-#makes one value for patients with multiple diseases as reason for admission and delete repeated columns
-c2<- c1 |>
-  mutate(Diagnosis=
-           case_when(str_detect(Diagnosis, 
-                                pattern=",",
-                                negate=FALSE)==TRUE ~ "multiple diseases", 
-                     str_detect(Diagnosis, 
-                                pattern=",",
-                                negate=FALSE)==FALSE ~ Diagnosis )) |> 
-  unique.data.frame() |> 
-  ungroup()
-
-
-aps1_data <- c2 |> 
-  select(ptID, aps1, death, Diagnosis) |> 
-   mutate(aps1_Interval = cut(aps1, breaks = c(0,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150), labels = c("0-10", "10-20", "20-30", "30-40", "40-50","50-60", "60-70", "70-80", "80-90", "90-100","100-110", "110-120", "120-130", "130-140", "140-150")))
-
-aps1_data
-
-   
-```
 
 ### **Logistic modelling**
 
@@ -96,7 +50,7 @@ First we try to do the prediction based on one of the diseases that was reason f
 
 ```{r}
 
-aps1_card<-aps1_data |> 
+aps1_card<-rhc_aug |> 
   filter(Diagnosis=='card')
 
 
@@ -238,4 +192,47 @@ aps1_estimates |>
   geom_text_repel(aes(label=label))+
   labs(x='Estimates', 
        y='aps1')
+```
+
+```{r}
+#Augumented data
+
+  #| label: function-for-words-to-binary
+# Creating a general function that can be used for yes and no columns
+create_binary_column <- function(x) {
+  ifelse(x == "Yes", 1, 
+  ifelse(x == "No", 0, x))
+}
+
+#Creates one column with all diseases that is reason for admission to the hospital, instead of them all being present for all patients.
+rhc_clean_long <- rhc_clean |>
+    
+  mutate(across(resp:ortho, 
+                ~create_binary_column(.))) |>
+  pivot_longer(cols = resp:ortho,
+               names_to = "Diagnosis",
+               values_to = "Values")|> 
+  filter(Values==1) |> 
+  
+   group_by(ptID) |> 
+  mutate(Diagnosis = paste(unique(Diagnosis), collapse = ",")) |> 
+  ungroup() 
+  
+
+#makes one value for patients with multiple diagnosis as reason for admission and delete repeated columns
+rhc_aug1 <- rhc_clean_long |>
+  mutate(Diagnosis=
+           case_when(str_detect(Diagnosis, 
+                                pattern=",",
+                                negate=FALSE)==TRUE ~ "multiple diagnosis", 
+                     str_detect(Diagnosis, 
+                                pattern=",",
+                                negate=FALSE)==FALSE ~ Diagnosis )) |> 
+  unique.data.frame() |> 
+  mutate(aps1_Interval = cut(aps1, breaks = c(0,15,30,45,60,75,90,105,120,135,150), labels = c("0-15", "15-30", "30-45", "45-60", "60-75","75-90", "90-105", "105-120", "120-135", "135-150")))
+
+#Add a column with the number of comorbidities each patient has.
+rhc_aug1<- rhc_aug1 |>
+  rowwise() |> 
+  mutate(comorbidities=sum(c_across(cardiohx:amihx)))
 ```
