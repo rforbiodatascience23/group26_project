@@ -86,6 +86,17 @@ rhc_aug <- inner_join(rhc_split1, rhc_split2, by ="ptID")
 ```
 
 
+## Save data
+
+```{r}
+#| label: Writing-new-augmented-csv
+#| 
+# Write the data to disk
+write_csv(x = rhc_aug,
+          file = "../data/rhc_aug.csv")
+
+```
+
 
 
 

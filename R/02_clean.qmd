@@ -44,10 +44,6 @@ rhc_clean <- rhc_clean |>
                 select(-c(ptid),-ends_with("dte"),-adld3p) |> 
                 rename(ptID= "...1")
 
-rhc_clean
-
-          
-
 ```
 
 ## Save data
@@ -59,16 +55,6 @@ write_csv(x = rhc_clean,
           file = "../data/rhc_clean.csv")
 
 ```
-
-## Comments
-```{r}
-#| echo: false
-
-#what do we do about date of last contact when looking at dead vs live
-
-#Delete all attributes when we know which ones we do not use
-```
-
 
 
 
