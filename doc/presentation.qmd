@@ -36,6 +36,11 @@ note to self:
 Eval parameter is whether to evaluate/run your chunk of code
 Echo parameter is whether to print the code
 
+
+The analysis was performed on the dataset: Right Heart Catheterization Dataset, first analysed Connors \italics(et. al) (1996)
+
+It focuses on the procedure right heart catheterization, and has many different variables pertaining to reason for hospitalization and underlying disease, as well as health information about the patients.
+
 ```{r}
 #| echo: false
 #| eval: true
@@ -58,6 +63,11 @@ rhc_clean <- read_csv(file = "../data/rhc_clean.csv")
 #| echo: true
 #| eval: true
 ```
+
+We performed our analysis using $\color{red}{\text{Tidyverse}}$. 
+
+
+
 
 
 <!--# ---------------------------------------------------------------------- -->
@@ -85,12 +95,30 @@ rhc_clean |> mutate(sex = factor(sex),
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
-## Plots
+## Investigating the mean blood pressure of the patients admitted with different diseases
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](../results/meanbp_plot.png){width=90% fig-align="right"}
+::: {.column width="50%"}
+
+::: {.column width="50%"}
+Violin plot $\rightarrow$ Multimodal / Bimodal distribution
+
+
+::: {.column width="50%"}
+
+
+
+:::: {.columns}
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
 ## Plots
+
+
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
@@ -102,7 +130,7 @@ rhc_clean |> mutate(sex = factor(sex),
 ::: {.column width="50%"}
 
 
-![](../results/results_plotted_on_coordinates.png){width=90% fig-align="left"}
+![](../results/result_plotted_on_coordinates.png){width=90% fig-align="right"}
 
 :::
 
@@ -126,7 +154,7 @@ rhc_clean |> mutate(sex = factor(sex),
 :::: {.columns}
 
 ::: {.column width="50%"}
-Hello
+More beautiful plots by Emilie
 
 :::
 
@@ -148,12 +176,16 @@ Hello
 <!--# ---------------------------------------------------------------------- -->
 ## Discussion
 
+How come we found no major discoveries?
 
+What could have been done differently?
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
 ## Conclusion
 
-We can conclude that PCA can make sense for further a
+We can conclude that PC can make sense for further analysis.
+
+We can conclude that high values of APS for several diagnosis, will increase the risk of death
 

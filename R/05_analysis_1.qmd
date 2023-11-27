@@ -13,6 +13,16 @@ library(dplyr)
 library(table1)
 ```
 
+
+Color Scheme:
+
+```{r}
+"darkolivegreen2"
+"darkgoldenrod1"
+"red"
+```
+
+
 ```{r}
 colnames(rhc_aug)
 ```
@@ -431,7 +441,7 @@ Individuals without insurance and those with private insurance have higher perce
 # FELIX :)
 
 
-rhc_aug |>
+death_count <- rhc_aug |>
   # filter(death == 0) |> 
   ggplot(aes(x = income, 
              fill = as.factor(death))) +
@@ -443,6 +453,15 @@ rhc_aug |>
   facet_wrap(~ninsclas) +
   # scale_fill_manual(values = c("red", "blue")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+death_count
+
+ggsave(filename = "death_count.png",
+       plot = death_count,
+       device = "png",
+       path = "../results",
+       scale = 1,
+       limitsize = TRUE)
+
 ```
 
 ```{r}
