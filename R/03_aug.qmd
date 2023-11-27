@@ -12,13 +12,54 @@ library(table1)
 ```
 
 #combine all diseases (in aug data)
+```{r}
+  #| label: function-for-words-to-binary
+# Creating a generel function that can be used for yes and no columns
+create_binary_column <- function(x) {
+  ifelse(x == "Yes", 1, 
+  ifelse(x == "No", 0, x))
+}
 
-#combine all symptoms (in aug data)
+#Creates one column with all diseases that is reason for admission to the hospital, instead of them all being present for all patients.
+rhc_clean_long <- rhc_clean |>
+    
+  mutate(across(resp:ortho, 
+                ~create_binary_column(.))) |>
+  pivot_longer(cols = resp:ortho,
+               names_to = "Diagnosis",
+               values_to = "Values")|> 
+  filter(Values==1) |> 
+  
+   group_by(ptID) |> 
+  mutate(Diagnosis = paste(unique(Diagnosis), collapse = ",")) 
+  
 
-#probablity of surviving/actually surviving (in aug data)
+#makes one value for patients with multiple diseases as reason for admission and delete repeated columns
+rhc_aug1 <- rhc_clean_long |>
+  mutate(Diagnosis=
+           case_when(str_detect(Diagnosis, 
+                                pattern=",",
+                                negate=FALSE)==TRUE ~ "multiple diseases", 
+                     str_detect(Diagnosis, 
+                                pattern=",",
+                                negate=FALSE)==FALSE ~ Diagnosis )) |> 
+  unique.data.frame() |> 
+  ungroup() |> 
+   mutate(aps1_Interval = cut(aps1, breaks = c(0,15,30,45,60,75,90,105,120,135,150), labels = c("0-15", "15-30", "30-45", "45-60", "60-75","75-90", "90-105", "105-120", "120-135", "135-150")))
+
+#Add a column with the number of comorbidities each patient has.
+rhc_aug1<- rhc_aug1 |>
+  rowwise() |> 
+  mutate(comorbidities=sum(c_across(cardiohx:amihx)))
+
+```
+
+
 
 ```{r}
-rhc_aug <- rhc_clean
+rhc_aug<- rhc_aug1
+
+rhc_aug
 ```
 
 
