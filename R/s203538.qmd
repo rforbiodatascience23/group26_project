@@ -95,19 +95,7 @@ rhc_aug |>
 #| label: meanbp-diagnosis-separated-RHC
 #| echo: false
 #| output: false
-rhc_clean |> 
-  select(meanbp1, 
-         resp:ortho,
-         swang1) |> 
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |>
-  mutate(swang1 = case_when(
-         swang1 == "No RHC" ~ 0,
-         swang1 == "RHC" ~ 1)) |> 
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values") |> 
-  filter(Values == 1) |> 
+rhc_aug|> 
   ggplot(aes(x = Diagnosis, 
              y = meanbp1,
              fill = factor(Values))) +
@@ -132,19 +120,7 @@ rhc_clean |>
 
 ```{r}
 #| label: meanbp-RHC-based-on-diagnosis
-rhc_clean |> 
-  select(meanbp1, 
-         resp:ortho,
-         swang1) |> 
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |>
-  mutate(swang1 = case_when(
-         swang1 == "No RHC" ~ 0,
-         swang1 == "RHC" ~ 1)) |> 
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values") |> 
-  filter(Values == 1) |> 
+rhc_aug |> 
   ggplot(aes(x = Diagnosis, 
              y = meanbp1,
              fill = factor(swang1))) +
@@ -156,14 +132,9 @@ rhc_clean |>
   labs(title = "Mean blood pressure across all diagnosis",
        y = "Mean blood pressure",
        color = "RHC") +
-  guides(fill = guide_legend(title = "Diagnosis Status",
-         color = guide_legend(title = "RHC"))) +
-  scale_fill_manual(values = c("1" = "#F8766D",
-                               "0" = "#619CFF"), 
-                    labels = c("1" = "Yes", 
-                               "0" = "No")) +
-  scale_color_manual(values = c("1" = "#F8766D", 
-                                "0" = "#619CFF"), 
+  guides(color = guide_legend(title = "RHC")) +
+  scale_color_manual(values = c("1" = "#619CFF", 
+                                "0" = "#F8766D"), 
                      labels = c("1" = "Yes", 
                                 "0" = "No"))
 ```
@@ -172,14 +143,9 @@ rhc_clean |>
 ```{r}
 #| label: meanbp-RHC-based-on-primary-disease
 rhc_clean |> 
-  select(meanbp1, 
-         cat1,
-         swang1) |>
-  convert_RHC() |> 
-  rename(RHC_status = swang1) |> 
-  ggplot(aes(x = cat1, 
+    ggplot(aes(x = cat1, 
              y = meanbp1,
-             fill = factor(RHC_status))) +
+             fill = factor(swang1))) +
   geom_point(aes(color = cat1),
              position = position_dodge(0.8), 
              alpha = 0.5) +
