@@ -14,9 +14,178 @@ library(table1)
 
 The analysis explores the correlation between illnesses, Right Heart Catheterization (RHC) treatment, and the Acute Physiology Score (APS) concerning mortality. Various plots are generated to create an understanding of the dataset, aiming to reveal potential relationships among the mentioned attributes. These visual representations serve as a tool to discover whether specific factors are associated with death.
 
+
+To get a quick overview of some the variables in the dataset we can plot some very simple plots. We start out by visualizing sex against the age, and color by the death column,
+```{r}
+#| label: plot-sex-against-age
+rhc_aug |> 
+  ggplot(aes(x = age, 
+             y = sex, 
+             color = death)) +
+  geom_point()
+
+
+```
+It is now seen here that there is no apparent pattern for death based on the sex against age plot above. 
+
+Another thing that we might want visualize is the mean blood pressure against each diagnosis. Before the data was agumented the code below was used to show people without disease as well with the legend label "0". Though, as the agumented code data was implemented the plot below show the same as the next plot
+```{r}
+#| label: meanbp-against-diagnosis-non-filtered
+#| echo: false
+#| output: false
+rhc_aug |> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(Values))) + #Is the factor(values) maybe unnecessary?
+  geom_point(aes(color = factor(Values)), 
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(color = "black", 
+               alpha = 0.5) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure") +
+  guides(fill = guide_legend(title = "Diagnosis Status"),
+         color = FALSE)
+  
+```
+
+This plot 
+```{r}
+#| label: meanbp-across-diagnosis-filtered
+rhc_aug |> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(Diagnosis))) +
+  geom_point(aes(color = factor(Diagnosis)), 
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(color = "black", 
+               alpha = 0.5) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure",
+       color = "Diagonosis") +
+  guides(fill = guide_legend(title = "Diagnosis Status"),
+         color = FALSE) +
+  theme(legend.key.height = unit(0.7, 'cm'),
+        legend.key.width = unit(0.7, 'cm'))
+
+  
+```
+
+
+```{r}
+#| label: meanbp-diagnosis-separated-RHC
+#| echo: false
+#| output: false
+rhc_aug|> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(Values))) +
+  geom_point(aes(color = as.factor(swang1)),
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure",
+       color = "RHC") +
+  guides(fill = guide_legend(title = "Diagnosis Status",
+         color = guide_legend(title = "RHC"))) +
+  scale_fill_manual(values = c("1" = "#F8766D", 
+                               "0" = "#619CFF"), 
+                    labels = c("1" = "Yes", 
+                               "0" = "No")) +
+  scale_color_manual(values = c("1" = "#F8766D",
+                                "0" = "#619CFF"), 
+                     labels = c("1" = "Yes", 
+                                "0" = "No"))
+```
+
+```{r}
+#| label: meanbp-RHC-based-on-diagnosis
+rhc_aug |> 
+  ggplot(aes(x = Diagnosis, 
+             y = meanbp1,
+             fill = factor(swang1))) +
+  geom_point(aes(color = as.factor(swang1)),
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_boxplot(alpha = 0.5, 
+               outlier.shape = NA) +
+  labs(title = "Mean blood pressure across all diagnosis",
+       y = "Mean blood pressure",
+       color = "RHC") +
+  guides(color = guide_legend(title = "RHC")) +
+  scale_color_manual(values = c("1" = "#619CFF", 
+                                "0" = "#F8766D"), 
+                     labels = c("1" = "Yes", 
+                                "0" = "No"))
+```
+
+
+```{r}
+#| label: meanbp-RHC-based-on-primary-disease
+rhc_aug |> 
+    ggplot(aes(x = cat1, 
+             y = meanbp1,
+             fill = factor(swang1))) +
+  geom_point(aes(color = cat1),
+             position = position_dodge(0.8), 
+             alpha = 0.5) +
+  geom_violin(alpha = 0.35, outlier.shape = NA) +
+  #geom_boxplot(alpha = 0.35, 
+               #outlier.shape = NA) +
+  scale_y_continuous(breaks = c(0, 50, 100, 150, 200),
+                     labels = c(0, 50, 100, 150, 200)) +
+  labs(title = "Meanbp against primary diseases",
+       x = "Primary disease category",
+       y = "Mean blood pressure",
+       color = "Primary Disease Category") +
+  guides(fill = guide_legend(title = "RHC")) +
+  theme(axis.text.x = element_text(angle = 30,
+                                   hjust = 1,
+                                   vjust = 1))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This plot shows all the diseases and how many people have it = 1 or dont have the disease = 0.
 ```{r}
-subHX <- rhc_clean |> select(ends_with("hx"))
+subHX <- rhc_aug |> select(ends_with("hx"))
 
 subHX <- subHX |> pivot_longer(everything(),
                       names_to = "variables",
@@ -59,7 +228,7 @@ rhc_aug |> mutate(swang1 = factor(x = swang1, levels = c(0,1), c("no RHC","RHC")
 This plot shows all individuals who survided and died with and without the RHC treatment. 
 ```{r}
 
-rhc_clean |> mutate(swang1 = factor(x = swang1, levels = c(0,1), c("no RHC","RHC")),
+rhc_aug |> mutate(swang1 = factor(x = swang1, levels = c(0,1), c("no RHC","RHC")),
                     death = factor(x = death, levels = c(0,1), c("alive","dead"))) |> 
   count(death, swang1) |> 
   ggplot(aes(x = swang1, y = n, fill = death))+
