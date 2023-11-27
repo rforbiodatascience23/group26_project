@@ -2,13 +2,6 @@
 # Load packages
 ```{r}
 library(tidyverse)
-library(base)
-library(patchwork)
-library(scales)
-library(ggridges)
-library(patchwork)
-library(ggseqlogo)
-library(dplyr)
 library(table1)
 ```
 
@@ -23,17 +16,21 @@ Here we will describe the dataset:
 - divide into two catagories, soscioeconomic factors and physical factors: Find when a patient recieves RHC based on different diseases. Find how well the treatment works in terms based on death rate. Does income, edu, insurance, race, (sex?), influence when a patient actually recieves the treatment?
 
 #Josefine
+The dataset we have used comes from Connors et al. (1996): The effectiveness of RHC in the initial care of critically ill patients. It was publicly available on hbiostat.org and downloaded as a cvs file. 
+The dataset contains information about patients admitted to the hospital in order to study the effect of right heart catherization (RHC). There are total of  2184 patients in the "disease" group which recieved RHC and 3551 patients in the "control" group without RHC. The control group was artificially created using a propensity matching score. The dataset contains 5735 rows and 63 columns. 
 
-- cat1 and cat2 are primary and secondary disease category
 ```{r}
-rhc_data |> group_by(cat1,cat2) |> summarise(n = n())
+rhc_data |> dim()
 ```
 
 ```{r}
-rhc_data |> select(ends_with("hx")) |> summarise(n =n())
+rhc_data |> group_by(swang1) |> summarise(n = n())
 ```
+
+The 63 variables can be divided into categories- Patient information includes general facts about the patients like race, age, gender. Socioeconomic information includes level of income, years of education, and healthcare. Fysiological stats are measurements like temperature, heart rate and blood pressure. Admission diagnosis are conditoins accounting for the reasons of the hospital visit. Comorbidities illness are diseases caused as a direct affect an underlying disease. Hospitalization information like addmission date, discharge date and date of last contact. Lastly, information about death vs. survival and date of last contact. 
+
+A statistical summary of patient information is displayed in table1. Swang1 is the attribute that shows if the patient recieved RHS or not. 
  
-Table1 summary:
 ```{r}
 T1 <- rhc_clean |> mutate(sex = factor(sex),
                     swang1 = factor(swang1),
@@ -45,28 +42,7 @@ T1
 ```
 
 
-  
-
-#Emilie
-
-
-
-
-#Sahand
-
-
-
-
-#Judith
-
-
-
-
-#Felix
-
-
-
-
+The broad spectrum of attributes allows for exciting analysis of how treatment type, diseases and economic factors influence the survival rate of people. 
 
 
 
