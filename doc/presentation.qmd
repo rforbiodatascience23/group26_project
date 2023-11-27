@@ -1,0 +1,18 @@
+---
+title: "Group 26 - Assignment 5"
+author: 
+- "Carl Felix Freiesleben - s203521"
+- "Emilie Munk - s203538"
+- "Josefine Løken - s183784"
+- "Judith Tierno Martí - s222869"
+- "Sahand Yazdani - s203538"format:
+  revealjs:
+    embed-resources: true
+    theme: moon
+    slide-number: c/t
+    width: 1600
+    height: 900
+    mainfont: avenir
+    footer: "R for Bio Data Science"
+---
+
