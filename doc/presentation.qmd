@@ -120,13 +120,13 @@ We used histograms because they are easy to read and interperate, while also sho
 :::: {.columns}
 
 ::: {.column width="60%"}
-![](../results/Comorbidities_risk.png){width=50% fig-align="left"}
+![](../results/06_Comorbidities_risk_4.png){width=50% fig-align="left"}
 
 :::
 
 ::: {.column width="40%"}
 
-![](../results/income_medicalinsurance.png){width=100% fig-align="right"}
+![](../results/05_income_medicalinsurance_2.png){width=100% fig-align="right"}
 
 
 :::
@@ -162,7 +162,7 @@ rhc_aug |> mutate(sex = factor(sex),
 
 ::: {.column width="75%"}
 
-![](../results/meanbp_plot.png){width=100% fig-align="left"}
+![](../results/06_meanbp_plot_3.png){width=100% fig-align="left"}
 :::
 
 ::: {.column width="25%"}
@@ -187,7 +187,7 @@ rhc_aug |> mutate(sex = factor(sex),
 :::: {.columns}
 
 ::: {.column width="75%"}
-![](../results/death_count.png){width=100% fig-align="left"}
+![](../results/05_death_count_1.png){width=100% fig-align="left"}
 :::
 
 ::: {.column width="25%"}
@@ -218,13 +218,13 @@ rhc_aug |> mutate(sex = factor(sex),
 ::: {.column width="50%"}
 
 
-![](../results/result_plotted_on_coordinates.png){width=100% fig-align="right"}
+![](../results/07_result_plotted_on_coordinates_5.png){width=100% fig-align="right"}
 
 :::
 
 ::: {.column width="50%"}
 
-![](../results/PCA_explained.png){width=100% fig-align="right"}
+![](../results/07_PCA_explained_6.png){width=100% fig-align="right"}
 
 
 
@@ -317,7 +317,7 @@ model_variables
 
 ::: {.column width="50%"}
 
-![](../results/model_estimates.png){width=100% fig-align="center"}
+![](../results/08_model_estimates_7.png){width=100% fig-align="center"}
 
 :::
 
@@ -353,5 +353,3 @@ We can conclude that high values of APS for several diagnosis, will increase the
 Sources: https://hbiostat.org/data/repo/rhc
 
 download: https://hbiostat.org/data/repo/rhc.csv
-
-
