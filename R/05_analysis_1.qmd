@@ -1,6 +1,8 @@
-## Here we will do a SOCIOECONOMIC analysis
+# SOCIOECONOMIC analysis
+We conducted a comprehensive socioeconomic analysis focusing on variables such as age, gender, education, race, income, and medical assurance. Plots and summary statistics explore the distribution of deaths and the application of right heart catheterization (RHC) across different subgroups of patients. The analysis provides insights into potential associations between socioeconomic factors and health outcomes.
 
-# Libraries 
+
+## Libraries 
 ```{r}
 library(tidyverse)
 library(base)
@@ -15,25 +17,16 @@ library(table1)
 
 
 Color Scheme:
-
 ```{r}
 "darkolivegreen2"
 "darkgoldenrod1"
 "red"
 ```
-
-
-```{r}
-colnames(rhc_aug)
-```
-
 The variables that we found to be interesting to analyze from a socioeconomic perspective are: 
 ```{r}
 rhc_aug |> select(age, sex, edu, race, income, ninsclas)
 ```
-
 For all the variables of interest, we focused on plotting the death distribution of patients and if they had been applied an RHC.
-
 
 
 ## Age
@@ -128,7 +121,6 @@ rhc_aug |>
   scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
-
 
 The following chunk is a representation of the percentage of deaths by gender.
 ```{r}
@@ -234,7 +226,6 @@ rhc_aug |>
   filter(swang1 == "RHC") |> 
   select(race, percent)
 ```
-
 These findings suggest a potential variation in RHC utilization among different racial groups, with the other racial category having the highest percentage of RHC procedures. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
@@ -267,10 +258,10 @@ rhc_aug |>
   filter(death == 1) |> 
   select(income, percent)
 ```
-
 This suggest that the lowest income category have the highest percentage of deaths. However, it is important to note that the differences are relatively small and may not be statistically significant. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
+Following plot provides insights into the RHC appliance rates across different incomes.
 ```{r}
 # Count of RHC by income
 rhc_aug |> 
@@ -297,9 +288,7 @@ rhc_aug |>
   filter(swang1 == "RHC") |> 
   select(income, percent)
 ```
-
 This suggests that patients with higher incomes may have better access to healthcare facilities and may be more likely to undergo diagnostic procedures like RHC. Further research would be needed to fully understand and check the underlying reasons for these variations.
-
 
 
 ## Education
@@ -330,7 +319,6 @@ rhc_aug |>
   filter(death == 1) |> 
   select(edu_group, percent)
 ```
-
 Individuals with higher education levels have slightly higher percentages of deaths. It is possible that individuals with higher education levels may have a higher likelihood of seeking medical attention and being diagnosed with underlying health conditions, which could contribute to the observed higher mortality rates. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
@@ -362,7 +350,6 @@ rhc_aug |>
   filter(swang1 == "RHC") |> 
   select(edu_group, percent)
 ```
-
 Individuals with higher education levels have slightly higher percentages of RHC procedures. They may have better access to healthcare, increased health literacy, and a greater understanding of the benefits of diagnostic procedures like RHC. So healthcare providers may be more likely to recommend RHC to patients with higher education levels. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
@@ -397,8 +384,6 @@ rhc_aug |>
   filter(death == 1) |> 
   select(ninsclas, percent)
 ```
-
-
 Individuals covered by Medicare having the highest percentage of deaths. This can be because Medicare is primarily for individuals aged 65 and older or those with certain disabilities, who may have a higher prevalence of chronic health conditions and therefore a higher risk of mortality. Further research would be needed to fully understand and check the underlying reasons for these variations.
 
 
@@ -434,15 +419,9 @@ Individuals without insurance and those with private insurance have higher perce
 
 
 
-
-
 ## Others
 
-
 ```{r}
-# FELIX :)
-
-
 death_count <- rhc_aug |>
   # filter(death == 0) |> 
   mutate(income = factor(income, levels = rev(levels(as.factor(income))))) |> 
@@ -479,7 +458,6 @@ rhc_aug |>
        fill = "Medical Insurance") +
   theme_minimal()
 ```
-
 ```{r}
 rhc_aug |> 
   filter(income == "Under $11k", ninsclas %in% c("Medicare", "Private")) |> 
@@ -499,9 +477,9 @@ rhc_aug |>
        x = "Income",
        y = "Number of patients") +
   facet_wrap(~income) +
-  theme_minimal() +
-  # scale_fill_manual(values = c("red", "blue")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_minimal()
+  
 ```
 
 ```{r}
@@ -517,7 +495,6 @@ rhc_aug |>
        fill = "RHC status") +
   facet_wrap(~income) +
   theme_minimal() +
-  scale_fill_manual(values = c("red", "blue")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
