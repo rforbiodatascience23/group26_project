@@ -157,12 +157,12 @@ aps1_estimates
 Plot of the model estimate aps1:
 
 ```{r}
-#Plots the model estimate aps1
+#Plots of the estimated variables
 model_estimates <- aps1_estimates |>
-  filter(term=='aps1') |> 
   ggplot(mapping = aes(x = estimate,
                        y = fct_reorder(Diagnosis,
                                        estimate))) +
+   facet_wrap(~term)+
   geom_point(aes(color=is_significant)) +
   geom_errorbarh(aes(xmin = conf.low, 
                      xmax = conf.high, color=is_significant)) +
@@ -189,34 +189,6 @@ The higher the estimate of the slope , the higher the risk of dying is by each r
 
 Plot of the model estimates intercept:
 
-```{r}
-#Plots the model estimate of the intercept
-model_estimates_2 <- aps1_estimates |>
-  filter(term=='(Intercept)') |> 
-  ggplot(mapping = aes(x = estimate,
-                       y = fct_reorder(Diagnosis,
-                                       estimate))) +
-  geom_point(aes(color=is_significant)) +
-  geom_errorbarh(aes(xmin = conf.low, 
-                     xmax = conf.high, color=is_significant)) +
-  geom_vline(xintercept = 0) +
-   scale_color_manual(
-    values = c(no = "darkred", yes = "darkgoldenrod1"),
-  ) +
-  labs(x='Estimates(95% CIs)', 
-       y='Diseases',
-       title = 'The estimate of the death outcome when the APACHE score is 0')
-
-ggsave(filename = "model_estimates_2.png",
-       plot = model_estimates_2,
-       device = "png",
-       path = "../results",
-       scale = 1,
-       limitsize = TRUE)
-
-model_estimates_2
-```
-
 Table with relevant model values for presentation.
 
 ```{r}
@@ -229,7 +201,6 @@ coefficients<-aps1_estimates |>
   filter(term == "aps1") |> 
   select(Diagnosis, estimate)
 
-  
 
 model_variables<- 
   inner_join(coefficients, intercepts, by = "Diagnosis") |> 
