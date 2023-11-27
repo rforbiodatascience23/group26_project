@@ -36,7 +36,7 @@ pca_fit
 I plot the coordinates of the first and second PCs, as well as the result of the different observations.
 ```{r}
 rhc_for_pca
-pca_fit |> 
+coordinates <- pca_fit |> 
   augment(rhc_for_pca) |> # add original dataset back in
   ggplot(aes(.fittedPC1, .fittedPC2,color = death), alpha = 0.5) + 
   geom_point(size = 1.5) +
@@ -45,7 +45,8 @@ pca_fit |>
   ) +
   labs(
     x = "Principal Component 1",
-    y = "Principal Component 2"
+    y = "Principal Component 2",
+    title = "Observations Plotted on First and Second Principal Components"
   )
 coordinates
 
@@ -81,7 +82,7 @@ pca_fit |>
 p1 <- pca_fit |>
   tidy(matrix = "eigenvalues") |> 
   ggplot(aes(PC, percent)) +
-  geom_col(fill = "darkolivegreen2", alpha = 0.8) +
+  geom_col(fill = "darkolivegreen2") +
   geom_line(aes(y = cumulative / transformation_coefficient), color = "darkgoldenrod1") +
   geom_point(aes(y = cumulative / transformation_coefficient), color = "darkgoldenrod1") +
   geom_hline(aes(yintercept = 0.8 / transformation_coefficient),linetype = 2, color = "red") +
@@ -89,10 +90,14 @@ p1 <- pca_fit |>
   scale_y_continuous(
     labels = scales::percent_format(),
     expand = expansion(mult = c(0, 0.01)),
-    sec.axis = sec_axis(trans =~.*transformation_coefficient, name = "Cumulative",
+    sec.axis = sec_axis(trans =~.*transformation_coefficient, name = "Cumulative Variance Explained",
                         labels = scales::percent_format())
   ) +
-  annotate("text", label = "PCs needed : 7", x = 7, y = 0.125, color = "darkred")
+  annotate("text", label = "PCs needed : 7", x = 7, y = 0.125, color = "darkred") +
+  labs(
+    y = "Percent Variance Explained by Each PC",
+    title = "Variance explained by Principal Components"
+  )
 p1
 ggsave(filename = "PCA_explained.png",
        plot = p1,
