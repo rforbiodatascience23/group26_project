@@ -36,3 +36,17 @@ rhc_aug |>
   scale_fill_manual(name= "Survival", values = c("0" = "#619CFF", "1" = "#F8766D"), labels= c('Dead', 'Alive')) +
   theme_minimal()
 ```
+
+```{r}
+rhc_aug |> 
+  ggplot(aes(x = aps1, fill=factor(death))) +
+  geom_bar(position = "stack") 
+  
+```
+
+```{r}
+rhc_aug |> 
+  ggplot(aes(x = aps1_Interval, fill=factor(death))) +
+  geom_bar(position = "stack") 
+
+```
