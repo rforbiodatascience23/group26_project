@@ -361,15 +361,17 @@ rhc_clean |>
 
 
 ```{r}
-# Bar plot for Death by income and medical assurance
+# FELIX :)
+
+
 rhc_clean |>
-  filter(death == 0) |> 
+  # filter(death == 0) |> 
   ggplot(aes(x = income, 
              fill = as.factor(death))) +
   geom_bar(position = "dodge") +
   labs(title = "Death Count by Income and Medical Assurance",
        x = "Income",
-       y = "Count",
+       y = "Number of patients",
        fill = "Death status") +
   facet_wrap(~ninsclas) +
   # scale_fill_manual(values = c("red", "blue")) +
@@ -381,13 +383,13 @@ rhc_clean |>
 
 rhc_clean |>
   # filter(swang1 == 'RHC') |> 
-  ggplot(aes(x = income,
+  ggplot(aes(x = race,
              fill = as.factor(swang1))) +
   geom_bar(position = "dodge") +
   labs(title = "RHC Count by Income and Race",
        x = "Income",
-       y = "Count") +
-  facet_wrap(~race) +
+       y = "Number of patients") +
+  facet_wrap(~income) +
   theme_minimal() +
   # scale_fill_manual(values = c("red", "blue")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
