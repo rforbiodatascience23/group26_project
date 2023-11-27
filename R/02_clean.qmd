@@ -32,17 +32,20 @@ rhc_clean<- rhc_clean |>
            swang1 == "RHC" ~ 1))
 
 #round age to the nearest whole number
-rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |> 
-                          mutate(age = round(age, 0),
-                                 weight = round(weight, 0),
-                                 edu = round(edu, 0),
-                                 temp1 = round(temp1, 1),
-                                 ph1 = round(ph1, 2))
+rhc_clean <- rhc_clean |> 
+  rename(weight = wtkilo1) |> 
+  mutate(age = round(age, 0),
+         weight = round(weight, 0),
+         edu = round(edu, 0),
+         temp1 = round(temp1, 1),
+         ph1 = round(ph1, 2))
 
 #Remove old ptid and create new ID's
 rhc_clean <- rhc_clean |> 
-                select(-c(ptid),-ends_with("dte"),-adld3p) |> 
-                rename(ptID= "...1")
+  select(-c(ptid),
+         -ends_with("dte"),
+         -adld3p) |> 
+  rename(ptID= "...1")
 
 ```
 
