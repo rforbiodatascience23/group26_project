@@ -137,9 +137,9 @@ meanbp_plot <- rhc_aug |>
                #outlier.shape = NA) +
   scale_y_continuous(breaks = c(0, 50, 100, 150, 200),
                      labels = c(0, 50, 100, 150, 200)) +
-  labs(title = "Meanbp against primary diseases",
-       x = "Primary disease category",
-       y = "Mean blood pressure",
+  labs(title = "Mean Blood Preassue Against Primary Diseases",
+       x = "Primary Disease Category",
+       y = "Mean Blood Pressure",
        color = "Primary Disease Category") +
   guides(fill = guide_legend(title = "RHC")) +
   theme(axis.text.x = element_text(angle = 30,
