@@ -15,6 +15,10 @@ library(dplyr)
 library(table1)
 ```
 
+```{r}
+rhc_aug <- read_csv("../data/rhc_aug.csv")
+```
+
 
 Color Scheme:
 ```{r}

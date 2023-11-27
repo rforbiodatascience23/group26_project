@@ -13,9 +13,6 @@ execute:
   message: TRUE
   warning: TRUE
 ---
-```{r}
-library(quarto)
-```
 
 ## Load Data
 {{< include 01_load.qmd >}}

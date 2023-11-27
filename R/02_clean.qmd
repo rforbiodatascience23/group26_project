@@ -13,6 +13,7 @@ library(ggseqlogo)
 library(dplyr)
 library(table1)
 
+rhc_clean <- read_csv("../data/rhc_clean.csv")
 #| label: Simple-cleaning-chunk-data-wrangling
 #copy paste
 rhc_clean <- rhc_data |> 
@@ -53,6 +54,8 @@ rhc_clean <- rhc_clean |>
 
 ```{r}
 #| label: Writing-new-cleaned-csv
+#| echo: false
+#| eval: true
 # Write the data to disk
 write_csv(x = rhc_clean,
           file = "../data/rhc_clean.csv")

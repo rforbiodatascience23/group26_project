@@ -9,6 +9,12 @@ The dataset we have used comes from Connors et al. (1996): The effectiveness of 
 The dataset contains information about patients admitted to the hospital in order to study the effect of right heart catherization (RHC). There are total of  2184 patients in the "disease" group which recieved RHC and 3551 patients in the "control" group without RHC. The control group was artificially created using a propensity matching score. The dataset contains 5735 rows and 63 columns. 
 
 ```{r}
+
+rhc_data <- read_csv("../data/rhc.csv")
+rhc_aug <- read_csv("../data/rhc_aug.csv")
+```
+
+```{r}
 rhc_data |> 
   dim()
 ```
