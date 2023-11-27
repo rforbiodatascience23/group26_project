@@ -11,7 +11,8 @@ library(dplyr)
 library(table1)
 ```
 
-The following analysis shows how illnesess, RHC treament and APS score relate to death. We make several plots in order to familiarize ourselves with the data and find relationships between the attrributes. 
+
+The analysis explores the correlation between illnesses, Right Heart Catheterization (RHC) treatment, and the Acute Physiology Score (APS) concerning mortality. Various plots are generated to create an understanding of the dataset, aiming to reveal potential relationships among the mentioned attributes. These visual representations serve as a tool to discover whether specific factors are associated with death.
 
 This plot shows all the diseases and how many people have it = 1 or dont have the disease = 0.
 ```{r}
