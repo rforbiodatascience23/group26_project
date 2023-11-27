@@ -30,9 +30,9 @@ rhc_clean |>
 ```{r}
 #| label: plot-surv-rate-vs-Cardi-Comor
 # Assuming 'Cardiohx' is a binary indicator for cardiovascular comorbidity
-rhc_clean %>%
-  group_by(cardiohx) %>%
-  summarise(survival_rate = mean(death)) %>%
+rhc_aug |> 
+  group_by(cardiohx) |> 
+  summarise(survival_rate = mean(death)) |> 
   ggplot(aes(x = factor(cardiohx), 
              y = survival_rate, 
              fill = factor(cardiohx))) +
@@ -42,6 +42,10 @@ rhc_clean %>%
        y = "Survival Rate") +
   guides(fill = guide_legend(title = "Disease Status"))
 
+rhc_aug |> 
+  group_by(Diagnosis) |> 
+  count()
+
 ```
 
 
@@ -49,17 +53,10 @@ rhc_clean %>%
 #| label: meanbp-across-diagnosis-non-filtered
 #| echo: false
 #| output: false
-rhc_clean |> 
-  select(meanbp1, 
-         resp:ortho) |> 
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |> 
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values") |> 
+rhc_aug |> 
   ggplot(aes(x = Diagnosis, 
              y = meanbp1,
-             fill = factor(Values))) +
+             fill = factor(Values))) + #Is the factor(values) maybe unnecessary?
   geom_point(aes(color = factor(Values)), 
              position = position_dodge(0.8), 
              alpha = 0.5) +
@@ -73,15 +70,7 @@ rhc_clean |>
 ```
 ```{r}
 #| label: meanbp-across-diagnosis-filtered
-rhc_clean |> 
-  select(meanbp1, 
-         resp:ortho) |> 
-  mutate(across(resp:ortho, 
-                ~create_binary_column(.))) |> 
-  pivot_longer(cols = resp:ortho,
-               names_to = "Diagnosis",
-               values_to = "Values") |>
-  filter(Values == 1) |> 
+rhc_aug |> 
   ggplot(aes(x = Diagnosis, 
              y = meanbp1,
              fill = factor(Diagnosis))) +
