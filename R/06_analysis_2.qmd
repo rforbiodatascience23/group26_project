@@ -7,6 +7,62 @@
 
 
 #Emilie
+Plots
+
+```{r}
+library(tidyverse)
+library(base)
+library(patchwork)
+library(scales)
+library(ggridges)
+library(patchwork)
+library(ggseqlogo)
+library(dplyr)
+library(table1)
+```
+
+Does the number of comorbidity diseases influence the risk of death?
+
+```{r}
+rhc_aug |>
+  ggplot(aes(x = comorbidities, fill=factor(death))) +
+  geom_bar(position = "stack") +
+  labs(title = "Risk of dying by number of comorbidities",
+       x = "Number of comorbidities",
+       y = "Number of patients") +
+  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+```
+
+
+The risk of dying depending on the number of comorbidities you have.
+```{r}
+rhc_aug |>
+  ggplot(aes(x = comorbidities, fill=factor(death))) +
+  facet_wrap(~swang1)+
+  geom_bar(position = "stack") +
+  labs(title = "Risk of dying by number of comorbidities",
+       x = "Number of comorbidities",
+       y = "Number of patients") +
+  scale_fill_manual(name= "Survival", values = c("0" = "#619CFF", "1" = "#F8766D"), labels= c('Dead', 'Alive')) +
+  theme_minimal()
+```
+
+
+We investigate how many survive and die depending on their APS score
+```{r}
+rhc_aug |> 
+  ggplot(aes(x = aps1, fill=factor(death))) +
+  geom_bar(position = "stack") 
+  
+```
+And then we make the x-axis an interval to bin the observations.
+```{r}
+rhc_aug |> 
+  ggplot(aes(x = aps1_Interval, fill=factor(death))) +
+  geom_bar(position = "stack") 
+
+```
 
 
 

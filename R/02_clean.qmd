@@ -25,6 +25,12 @@ rhc_clean <- rhc_clean |>
   death == "No" ~ 0,
   death == "Yes" ~ 1))
 
+#Change RHC strings to factor
+rhc_clean<- rhc_clean |> 
+    mutate(swang1 = case_when(
+           swang1 == "No RHC" ~ 0,
+           swang1 == "RHC" ~ 1))
+
 #round age to the nearest whole number
 rhc_clean <- rhc_clean |> rename(weight = wtkilo1) |> 
                           mutate(age = round(age, 0),

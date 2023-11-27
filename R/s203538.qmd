@@ -68,6 +68,7 @@ rhc_aug |>
          color = FALSE)
   
 ```
+
 ```{r}
 #| label: meanbp-across-diagnosis-filtered
 rhc_aug |> 

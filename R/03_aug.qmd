@@ -63,11 +63,6 @@ rhc_aug1<- rhc_aug1 |>
   rowwise() |> 
   mutate(comorbidities=sum(c_across(cardiohx:amihx)))
 
-#Change RHC strings to factor
-rhc_aug1<- rhc_aug1 |> 
-    mutate(swang1 = case_when(
-           swang1 == "No RHC" ~ 0,
-           swang1 == "RHC" ~ 1))
 
 ```
 
