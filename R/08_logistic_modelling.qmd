@@ -6,7 +6,7 @@ editor: visual
 
 ## Logistic modelling
 
-The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are. 
+The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are.
 
 Usually this ranges from 0-71, but in this data set the min and max are 3-147, this is probably because the scoring system has been changed since the data was created.
 
@@ -185,7 +185,7 @@ ggsave(filename = "model_estimates.png",
 model_estimates
 ```
 
-The higher the estimate , the higher the risk of dying is by each rise in the APACHE score, the risk of dying increases with e\^estimate.
+The higher the estimate of the slope , the higher the risk of dying is by each rise in the APACHE score.
 
 Plot of the model estimates intercept:
 
@@ -234,7 +234,9 @@ coefficients<-aps1_estimates |>
 model_variables<- 
   inner_join(coefficients, intercepts, by = "Diagnosis") |> 
   rename(Intercept=estimate.y) |> 
-  rename(Coefficient=estimate.x)
+  rename(Coefficient=estimate.x) |> 
+  ungroup()
+
 model_variables
 
 ```
