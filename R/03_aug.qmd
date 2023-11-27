@@ -76,9 +76,15 @@ rhc_aug1<- rhc_aug1 |>
   mutate(comorbidities=sum(c_across(cardiohx:amihx)))
 
 
+#simulated seperated and joined datatable
+
+rhc_split1 <- rhc_aug1 |> select(-c(edu_group,comorbidities)) 
+rhc_split2 <- rhc_aug1 |> select(c(ptID,edu_group,comorbidities))
+
+rhc_aug1 <- inner_join(rhc_split1, rhc_split2, by ="ptID")
+
+
 ```
-
-
 
 ```{r}
 rhc_aug<- rhc_aug1
