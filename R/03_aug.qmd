@@ -20,6 +20,17 @@ create_binary_column <- function(x) {
   ifelse(x == "No", 0, x))
 }
 
+convert_RHC <- function(df) {
+  df %>%
+    mutate(swang1 = case_when(
+      swang1 == "No RHC" ~ 0,
+      swang1 == "RHC" ~ 1
+    ))
+}
+
+
+
+
 #Creates one column with all diseases that is reason for admission to the hospital, instead of them all being present for all patients.
 rhc_clean_long <- rhc_clean |>
     
@@ -35,12 +46,12 @@ rhc_clean_long <- rhc_clean |>
   ungroup() 
   
 
-#makes one value for patients with multiple diseases as reason for admission and delete repeated columns
+#makes one value for patients with multiple diagnosis as reason for admission and delete repeated columns
 rhc_aug1 <- rhc_clean_long |>
   mutate(Diagnosis=
            case_when(str_detect(Diagnosis, 
                                 pattern=",",
-                                negate=FALSE)==TRUE ~ "multiple diseases", 
+                                negate=FALSE)==TRUE ~ "multiple diagnosis", 
                      str_detect(Diagnosis, 
                                 pattern=",",
                                 negate=FALSE)==FALSE ~ Diagnosis )) |> 
@@ -51,6 +62,12 @@ rhc_aug1 <- rhc_clean_long |>
 rhc_aug1<- rhc_aug1 |>
   rowwise() |> 
   mutate(comorbidities=sum(c_across(cardiohx:amihx)))
+
+#Change RHC strings to factor
+rhc_aug1<- rhc_aug1 |> 
+    mutate(swang1 = case_when(
+           swang1 == "No RHC" ~ 0,
+           swang1 == "RHC" ~ 1))
 
 ```
 
