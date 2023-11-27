@@ -18,7 +18,9 @@ Furthermore, we choose the variables we wanted to investigate. Then we used the 
 
 ```{r}
 rhc_for_pca <- rhc_aug |>
-  select(c(death,swang1,age,edu,meanbp1,resp1,hrt1,crea1,pot1,surv2md1)) |> 
+  select(c(death, swang1, age, edu, 
+           meanbp1, resp1, hrt1, 
+           crea1, pot1, surv2md1)) |> 
     mutate(death = case_when(
          death == 0 ~ "Alive",
          death == 1 ~ "Dead"))
@@ -38,10 +40,13 @@ I plot the coordinates of the first and second PCs, as well as the result of the
 rhc_for_pca
 coordinates <- pca_fit |> 
   augment(rhc_for_pca) |> # add original dataset back in
-  ggplot(aes(.fittedPC1, .fittedPC2,color = death), alpha = 0.5) + 
+  ggplot(aes(.fittedPC1, 
+             .fittedPC2,
+             color = death), 
+             alpha = 0.5) + 
   geom_point(size = 1.5) +
-  scale_color_manual(
-    values = c(Dead = "darkred", Alive = "darkolivegreen2"),
+  scale_color_manual(values = c(Dead = "darkred", 
+                                Alive = "darkolivegreen2"),
   ) +
   labs(
     x = "Principal Component 1",
@@ -83,22 +88,28 @@ p1 <- pca_fit |>
   tidy(matrix = "eigenvalues") |> 
   ggplot(aes(PC, percent)) +
   geom_col(fill = "darkolivegreen2") +
-  geom_line(aes(y = cumulative / transformation_coefficient), color = "darkgoldenrod1") +
-  geom_point(aes(y = cumulative / transformation_coefficient), color = "darkgoldenrod1") +
-  geom_hline(aes(yintercept = 0.8 / transformation_coefficient),linetype = 2, color = "red") +
+  geom_line(aes(y = cumulative / transformation_coefficient), 
+            color = "darkgoldenrod1") +
+  geom_point(aes(y = cumulative / transformation_coefficient), 
+             color = "darkgoldenrod1") +
+  geom_hline(aes(yintercept = 0.8 / transformation_coefficient),
+             linetype = 2, 
+             color = "red") +
   scale_x_continuous(breaks = 1:9) +
-  scale_y_continuous(
-    labels = scales::percent_format(),
-    expand = expansion(mult = c(0, 0.01)),
-    sec.axis = sec_axis(trans =~.*transformation_coefficient, name = "Cumulative Variance Explained",
-                        labels = scales::percent_format())
-  ) +
-  annotate("text", label = "PCs needed : 7", x = 7, y = 0.125, color = "darkred") +
-  labs(
-    y = "Percent Variance Explained by Each PC",
-    title = "Variance explained by Principal Components"
-  )
+  scale_y_continuous(labels = scales::percent_format(),
+                     expand = expansion(mult = c(0, 0.01)),
+                     sec.axis = sec_axis(trans = ~.*transformation_coefficient, 
+                        name = "Cumulative Variance Explained",
+                        labels = scales::percent_format())) +
+  annotate("text", 
+           label = "PCs needed : 7", 
+           x = 7, 
+           y = 0.125, 
+           color = "darkred") +
+  labs(y = "Percent Variance Explained by Each PC",
+       title = "Variance explained by Principal Components")
 p1
+
 ggsave(filename = "PCA_explained.png",
        plot = p1,
        device = "png",
@@ -118,21 +129,24 @@ pca_fit |>
 
 The influence of each variable on the first and second PC is plotted.
 ```{r}
-arrow_style <- arrow(
-  angle = 20, ends = "first", type = "closed", length = grid::unit(8, "pt")
-)
+arrow_style <- arrow(angle = 20, 
+                     ends = "first", 
+                     type = "closed", 
+                     length = grid::unit(8, "pt"))
 
 # plot rotation matrix
 pca_fit |> 
   tidy(matrix = "rotation") |> 
-  pivot_wider(names_from = "PC", names_prefix = "PC", values_from = "value") |> 
+  pivot_wider(names_from = "PC", 
+              names_prefix = "PC", 
+              values_from = "value") |> 
   ggplot(aes(PC1, PC2)) +
-  geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
-  geom_text(
-    aes(label = column),
-    hjust = 1, nudge_x = -0.02, 
-    color = "#904C2F"
-  ) +
+  geom_segment(xend = 0, 
+               yend = 0, 
+               arrow = arrow_style) +
+  geom_text(aes(label = column),
+            hjust = 1, nudge_x = -0.02, 
+            color = "#904C2F") +
   xlim(-1.25, .5) + ylim(-.5, 1) +
   coord_fixed() # fix aspect ratio to 1:1
 
