@@ -145,7 +145,7 @@ aps1_estimates <- aps1_estimates |>
 aps1_estimates
 ```
 
-Plots of the model estimate aps1:
+Plot of the model estimate aps1:
 
 ```{r}
 model_estimates <- aps1_estimates |>
@@ -177,6 +177,8 @@ model_estimates
 
 The higher the estimate , the higher the risk of dying is by each rise in the APACHE score, the risk of dying increases with e\^estimate.
 
+Plot of the model estimates intercept:
+
 ```{r}
 model_estimates_2 <- aps1_estimates |>
   filter(term=='(Intercept)') |> 
@@ -187,6 +189,9 @@ model_estimates_2 <- aps1_estimates |>
   geom_errorbarh(aes(xmin = conf.low, 
                      xmax = conf.high, color=is_significant)) +
   geom_vline(xintercept = 0) +
+   scale_color_manual(
+    values = c(no = "darkred", yes = "darkgoldenrod1"),
+  ) +
   labs(x='Estimates(95% CIs)', 
        y='Diseases',
        title = 'The estimate of the death outcome when the APACHE score is 0')
@@ -200,6 +205,8 @@ ggsave(filename = "model_estimates_2.png",
 
 model_estimates_2
 ```
+
+Table with relevant model values for presentation.
 
 ```{r}
 
