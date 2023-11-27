@@ -28,7 +28,7 @@ rhc_aug |>
 ```
 It is now seen here that there is no apparent pattern for death based on the sex against age plot above. 
 
-Another thing that we might want visualize is the mean blood pressure against each diagnosis. Before the data was agumented the code below was used to show people without disease as well with the legend label "0". Though, as the agumented code data was implemented the plot below show the same as the next plot. 
+Another thing that we might want visualize is the mean blood pressure against each diagnosis. Before the data was agumented the code below was used to show patient without disease as well with the legend label "0". Though, as the agumented code data was implemented the plot below show the same as the next plot. 
 ```{r}
 #| label: meanbp-against-diagnosis-non-filtered
 #| echo: false
@@ -49,7 +49,7 @@ rhc_aug |>
   
 ```
 
-This plot is the same as the code above with color mapping for each diagnosis. It show the mean blood pressure for each diagnosis
+This plot is the same as the code above with color mapping for each diagnosis. It show the mean blood pressure for each diagnosis. 
 ```{r}
 #| label: meanbp-across-diagnosis-filtered
 rhc_aug |> 
@@ -61,7 +61,7 @@ rhc_aug |>
              alpha = 0.5) +
   geom_boxplot(color = "black", 
                alpha = 0.5) +
-  labs(title = "Mean blood pressure across all diagnosis",
+  labs(title = "Mean blood pressure against all diagnosis",
        y = "Mean blood pressure",
        color = "Diagonosis") +
   guides(fill = guide_legend(title = "Diagnosis Status"),
@@ -71,13 +71,15 @@ rhc_aug |>
 
   
 ```
+Already from these two plots we see that underlying data points are split into two groups and we will take this into consideration in a bit.
 
 
+This plot doesn't make much sense with use of rhc_aug data. Therefore, we will skip this as continuing with this will lead to a dead end.
 ```{r}
 #| label: meanbp-diagnosis-separated-RHC
 #| echo: false
 #| output: false
-rhc_aug|> 
+rhc_aug |> 
   ggplot(aes(x = Diagnosis, 
              y = meanbp1,
              fill = factor(Values))) +
@@ -99,7 +101,7 @@ rhc_aug|>
                      labels = c("1" = "Yes", 
                                 "0" = "No"))
 ```
-
+The plot below show the mean blood pressure for patiens across all diagnoses and whether they had RHC performed on them. So we generally see picture of patients with lower blood pressure getting RHC performed on them.
 ```{r}
 #| label: meanbp-RHC-based-on-diagnosis
 rhc_aug |> 
@@ -111,17 +113,17 @@ rhc_aug |>
              alpha = 0.5) +
   geom_boxplot(alpha = 0.5, 
                outlier.shape = NA) +
-  labs(title = "Mean blood pressure across all diagnosis",
+  labs(title = "Mean blood pressure for all diagnoses and RHC status",
        y = "Mean blood pressure",
-       color = "RHC") +
-  guides(color = guide_legend(title = "RHC")) +
+       color = "RHC status",
+       fill = "RHC status") +
   scale_color_manual(values = c("1" = "#619CFF", 
                                 "0" = "#F8766D"), 
                      labels = c("1" = "Yes", 
                                 "0" = "No"))
 ```
 
-
+In the plot below we take into account the split in data points we see underneath each violin plot. This is due to the data following a bimodal distribution which has to peaks rather than the normal distribution which has one peak. The reason why we have chosen the violin plot is to signify the bimodal distribution. 
 ```{r}
 #| label: meanbp-RHC-based-on-primary-disease
 meanbp_plot <- rhc_aug |> 
@@ -131,7 +133,8 @@ meanbp_plot <- rhc_aug |>
   geom_point(aes(color = cat1),
              position = position_dodge(0.8), 
              alpha = 0.5) +
-  geom_violin(alpha = 0.35, outlier.shape = NA) +
+  geom_violin(alpha = 0.5,
+              outlier.shape = NA) +
   #geom_boxplot(alpha = 0.35, 
                #outlier.shape = NA) +
   scale_y_continuous(breaks = c(0, 50, 100, 150, 200),
