@@ -11,10 +11,10 @@ library(dplyr)
 library(table1)
 ```
 
-#combine all diseases (in aug data)
+#Augumented data
 ```{r}
   #| label: function-for-words-to-binary
-# Creating a generel function that can be used for yes and no columns
+# Creating a general function that can be used for yes and no columns
 create_binary_column <- function(x) {
   ifelse(x == "Yes", 1, 
   ifelse(x == "No", 0, x))
