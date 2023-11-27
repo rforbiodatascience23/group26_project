@@ -175,7 +175,7 @@ model_estimates <- aps1_estimates |>
        title = 'The APACHE scores contribution to the prediction of death',
        color = "Significant")
 
-ggsave(filename = "model_estimates.png",
+ggsave(filename = "08_model_estimates_7.png",
        plot = model_estimates,
        device = "png",
        path = "../results",

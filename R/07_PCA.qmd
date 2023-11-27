@@ -55,7 +55,7 @@ coordinates <- pca_fit |>
   )
 coordinates
 
-ggsave(filename = "result_plotted_on_coordinates.png",
+ggsave(filename = "07_result_plotted_on_coordinates_5.png",
        plot = coordinates,
        device = "png",
        path = "../results",
@@ -110,7 +110,7 @@ p1 <- pca_fit |>
        title = "Variance explained by Principal Components")
 p1
 
-ggsave(filename = "PCA_explained.png",
+ggsave(filename = "07_PCA_explained_6.png",
        plot = p1,
        device = "png",
        path = "../results",

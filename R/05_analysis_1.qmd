@@ -453,7 +453,7 @@ death_count <- rhc_aug |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 death_count
 
-ggsave(filename = "death_count.png",
+ggsave(filename = "05_death_count_1.png",
        plot = death_count,
        device = "png",
        path = "../results",
@@ -475,7 +475,7 @@ income_medicalinsurance <- rhc_aug |>
 
 income_medicalinsurance
 
-ggsave(filename = "income_medicalinsurance.png",
+ggsave(filename = "05_income_medicalinsurance_2.png",
        plot = income_medicalinsurance,
        device = "png",
        path = "../results",

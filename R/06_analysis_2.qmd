@@ -148,7 +148,7 @@ meanbp_plot <- rhc_aug |>
 
 meanbp_plot
 
-ggsave(filename = "meanbp_plot.png",
+ggsave(filename = "06_meanbp_plot_3.png",
        plot = meanbp_plot,
        device = "png",
        path = "../results",
@@ -190,7 +190,7 @@ Comorbidities_risk <- rhc_aug |> mutate(death = factor(x = death,
                     values = c("No" = "darkolivegreen2", 
                                "Yes" = "red"))
 
-ggsave(filename = "Comorbidities_risk.png",
+ggsave(filename = "06_Comorbidities_risk_4.png",
        plot = Comorbidities_risk,
        device = "png",
        path = "../results",
