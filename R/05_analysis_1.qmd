@@ -24,7 +24,8 @@ Color Scheme:
 ```
 The variables that we found to be interesting to analyze from a socioeconomic perspective are: 
 ```{r}
-rhc_aug |> select(age, sex, edu, race, income, ninsclas)
+rhc_aug |> 
+  select(age, sex, edu, race, income, ninsclas)
 ```
 For all the variables of interest, we focused on plotting the death distribution of patients and if they had been applied an RHC.
 
@@ -36,12 +37,13 @@ Following plot provides insights into the mortality rates across different ages.
 # Death in different ages
 rhc_aug |>
   ggplot(aes(x = age, 
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death in different ages",
        x = "Age",
        y = "Number of patients") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 
 ```
@@ -51,12 +53,13 @@ Following plot provides insights into the mortality rates across different age g
 # Death in different group ages
 rhc_aug |>
   ggplot(aes(x = age_group, 
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death in different ages",
        x = "Age",
        y = "Number of patients") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
 
@@ -86,7 +89,8 @@ rhc_aug |>
        x = "Age",
        y = "Count",
        fill = "RHC Status") +
-  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  scale_fill_manual(name= "RHC Status", 
+                    values = c("No RHC" = "blue", "RHC" = "red")) +
   theme_minimal()
   
 ```
@@ -113,12 +117,13 @@ Following plot provides insights into the mortality rates across different gende
 # Death females vs. males
 rhc_aug |>
   ggplot(aes(x = sex,
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death females vs. males",
        x = "Gender",
        y = "Number of patients") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
 
@@ -149,7 +154,8 @@ rhc_aug |>
        x = "Gender",
        y = "Number of patients",
        fill = "RHC Status") +
-  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  scale_fill_manual(name= "RHC Status", 
+                    values = c("No RHC" = "blue", "RHC" = "red")) +
   theme_minimal()
 ```
 
@@ -175,13 +181,14 @@ Following plot provides insights into the mortality rates across different races
 #Death by race
 rhc_aug |> 
   ggplot(aes(x = race, 
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death in race",
        x = "Race",
        y = "Count",
        fill = "Death") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
 
@@ -210,7 +217,8 @@ rhc_aug |>
        x = "Race",
        y = "Number of patients",
        fill = "RHC Status") +
-  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  scale_fill_manual(name= "RHC Status", 
+                    values = c("No RHC" = "blue", "RHC" = "red")) +
   theme_minimal()
 ```
 
@@ -236,13 +244,13 @@ Following plot provides insights into the mortality rates across different patie
 #Death by income
 rhc_aug |> 
   ggplot(aes(x = income, 
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death by Income",
        x = "Income",
        y = "Number of patients",
        fill = "Death") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
 
@@ -272,7 +280,8 @@ rhc_aug |>
        x = "Income",
        y = "Number of patients",
        fill = "RHC Status") +
-  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  scale_fill_manual(name = "RHC Status", 
+                    values = c("No RHC" = "blue", "RHC" = "red")) +
   theme_minimal()
 ```
 
@@ -298,12 +307,13 @@ Following plot provides insights into the mortality rates across different educa
 # Death in different group of education
 rhc_aug |>
   ggplot(aes(x = edu_group, 
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death by Education",
        x = "Years of eduaction",
        y = "Number of patients") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", "1" = "red")) +
   theme_minimal()
 ```
 
@@ -333,7 +343,8 @@ rhc_aug |>
        x = "Education",
        y = "Number of patients",
        fill = "RHC Status") +
-  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  scale_fill_manual(name = "RHC Status", 
+                    values = c("No RHC" = "blue", "RHC" = "red")) +
   theme_minimal()
 
 ```
@@ -360,13 +371,14 @@ Following plot provides insights into the mortality rates across different medic
 #Death by medical assurance
 rhc_aug |> 
   ggplot(aes(x = ninsclas, 
-             fill=factor(death))) +
+             fill = factor(death))) +
   geom_bar() +
   labs(title = "Death in medical assurance",
        x = "Medical assurance",
        y = "Number of patients",
        fill = "Death") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", "1" = "red")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
   
@@ -398,7 +410,8 @@ rhc_aug |>
        x = "Medical assurance",
        y = "Number of patients",
        fill = "RHC Status") +
-  scale_fill_manual(name= "RHC Status", values = c("No RHC" = "blue", "RHC" = "red")) +
+  scale_fill_manual(name = "RHC Status", 
+                    values = c("No RHC" = "blue", "RHC" = "red")) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
@@ -424,7 +437,8 @@ Individuals without insurance and those with private insurance have higher perce
 ```{r}
 death_count <- rhc_aug |>
   # filter(death == 0) |> 
-  mutate(income = factor(income, levels = rev(levels(as.factor(income))))) |> 
+  mutate(income = factor(income, 
+                         levels = rev(levels(as.factor(income))))) |> 
   ggplot(aes(x = income, 
              fill = as.factor(death))) +
   geom_bar(position = "dodge") +
@@ -433,7 +447,8 @@ death_count <- rhc_aug |>
        y = "Number of patients",
        fill = "Death status") +
   facet_wrap(~ninsclas) +
-  scale_fill_manual(name = "death", values = c( "darkolivegreen2", "red")) +
+  scale_fill_manual(name = "death", 
+                    values = c("darkolivegreen2", "red")) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 death_count
 
@@ -450,7 +465,7 @@ ggsave(filename = "death_count.png",
 ```{r}
 rhc_aug |> 
   ggplot(aes(x = income, 
-             fill=factor(ninsclas))) +
+             fill = factor(ninsclas))) +
   geom_bar() +
   labs(title = "Income by Medical Assurance",
        x = "Income",
