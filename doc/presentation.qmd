@@ -110,17 +110,31 @@ After cleaning and augmentation:
 ## Materials and Methods
 
 
+
 Familiarize ourselves with the data by extracting different information about the attributes and made numerous plots
 
 Created summaries of different attributes, to find what makes sense to analyse 
 
-```{r}
-rhc_aug |> group_by(swang1, death) |> summarise(n = n())
-```
-
 We used histograms because they are easy to read and interperate, while also showing a lot of information
 
-*insert 2 small images as examples
+:::: {.columns}
+
+::: {.column width="60%"}
+![](../results/Comorbidities_risk.png){width=50% fig-align="left"}
+
+:::
+
+::: {.column width="40%"}
+
+![](../results/income_medicalinsurance.png){width=100% fig-align="right"}
+
+
+:::
+
+::::
+
+
+
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
@@ -180,10 +194,10 @@ rhc_aug |> mutate(sex = factor(sex),
 
 ::: {.incremental}
 
-- Most patients have low income.
-- Patients are mostly covered by Medicare or Private medical assurance.
-- Individuals in lower income categories have a higher mortality.
-- Individuals covered by Medicare have the highest mortality.
+- Most patients have low income
+- Patients are mostly covered by Medicare or Private medical assurance
+- Individuals in lower income categories have a higher mortality
+- Individuals covered by Medicare have the highest mortality
 
 :::
 
@@ -227,7 +241,7 @@ rhc_aug |> mutate(sex = factor(sex),
 
 :::: {.columns}
 
-::: {.column width="30%"}
+
 
 ```{r}
 library("tidyverse")
@@ -237,7 +251,6 @@ aps1_data_nested <- rhc_aug |>
   group_by(Diagnosis) |> 
   nest() |> 
   ungroup()
-aps1_data_nested
 
 aps1_data_nested <- aps1_data_nested |> 
     mutate(model_object = map(.x = data,
@@ -288,6 +301,8 @@ model_variables<-
 
 ```
 
+
+::: {.column width="50%"}
 ```{r}
 #| echo: false
 #| eval: true
@@ -298,22 +313,14 @@ model_variables
 ```
 
 
-
-
 :::
-
-::: {.column width="70%"}
 
 ::: {.column width="50%"}
 
-![](../results/model_estimates.png){width=120% fig-align="center"}
-
-![](../results/model_estimates_2.png){width=120% fig-align="center"}
+![](../results/model_estimates.png){width=100% fig-align="center"}
 
 :::
 
-
-:::
 
 ::::
 
@@ -338,4 +345,13 @@ What could have been done differently?
 We can conclude that PC can make sense for further analysis.
 
 We can conclude that high values of APS for several diagnosis, will increase the risk of death
+
+<!--# ---------------------------------------------------------------------- -->
+<!--# SLIDE ---------------------------------------------------------------- -->
+<!--# ---------------------------------------------------------------------- -->
+
+Sources: https://hbiostat.org/data/repo/rhc
+
+download: https://hbiostat.org/data/repo/rhc.csv
+
 
