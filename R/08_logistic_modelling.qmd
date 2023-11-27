@@ -162,7 +162,7 @@ model_estimates <- aps1_estimates |>
   ggplot(mapping = aes(x = estimate,
                        y = fct_reorder(Diagnosis,
                                        estimate))) +
-   facet_wrap(~term)+
+   facet_wrap(~term, scales = "free_x")+
   geom_point(aes(color=is_significant)) +
   geom_errorbarh(aes(xmin = conf.low, 
                      xmax = conf.high, color=is_significant)) +
