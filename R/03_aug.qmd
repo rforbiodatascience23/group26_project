@@ -22,30 +22,5 @@ rhc_aug <- rhc_clean
 ```
 
 
-```{r}
-library(dplyr)
 
-#Remove lines with NA
-diseases <- rhc_aug |> select(c(("cardio"):c("ami")))
-
-rhc_aug <- rhc_aug |>  na.omit(rhc_aug[, diseases])
-rhc_aug
-rhc_aug |> mutate(number_diseases = rowSums(diseases))
-rhc_aug <- rhc_aug |> select(-colnames(diseases))
-
-diseases
-rowSums(diseases)
-```
-
-```{r}
-#Remove lines with NA
-rhc_aug <- rhc_aug |> na.omit(rhc_aug[, select(c("cardio"):c("ami"))]) 
-
-#Summarize number of diseases into new col. Remove all individual diseases
-rhc_aug <- rhc_aug |> mutate(number_diseases = rowSums(select(c("cardio"):c("ami")))) 
-
-rhc_aug |> rowSums(select(c("cardio"):c("ami")))
-
-
-```
 
