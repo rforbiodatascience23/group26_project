@@ -6,11 +6,13 @@ editor: visual
 
 ## Logistic modelling
 
-The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are. Usually this ranges from 0-71, but in this data set the min and max are 3-147, this is probably because the scoring system has been changed since the data was created.
+The Aps1 is the APACHE score, which is a score given to patients in the ICU based on their vital scores, age and overall health, this score estimates the mortality of the patient based on how ill they are. 
+
+Usually this ranges from 0-71, but in this data set the min and max are 3-147, this is probably because the scoring system has been changed since the data was created.
 
 We wish to model what scores indicates death and what scores indicate you will survive for the APACHE score.
 
-As the value death is a binomial value we choose the logistic binomial model to try and fit the data.
+As the value death is a binary value we choose the logistic binomial model to try and fit the data.
 
 ```{r}
 library(tidyverse)
@@ -29,6 +31,7 @@ library(purrr)
 First we see if there is a general pattern in the mean values of the APACHE scores.
 
 ```{r}
+#Means of aps1 for each dignosis
 rhc_aug |> 
   group_by(Diagnosis, death) |> 
   summarise(mu=mean(aps1))
@@ -41,7 +44,7 @@ In all cases it is clear that the means of the APACHE scores are higher for thos
 First we try to do the prediction based on one of the diseases that was reason for admission (card).
 
 ```{r}
-
+#Model of outcome of death based on aps1 for card patients.
 aps1_card<-rhc_aug |> 
   filter(Diagnosis=='card')
 
@@ -63,11 +66,12 @@ aps1_card_model |>
 
 It seems that it is statistically significant.
 
-### Model all the diseases
+### Model all the diagnoses
 
 We then choose to model the outcome for all the different admission diagnoses to see if we can predict the outcome of death by the APACHE score.
 
 ```{r}
+#Create nested data.
 aps1_data_nested <- rhc_aug |> 
   group_by(Diagnosis) |> 
   nest() |> 
@@ -76,13 +80,14 @@ aps1_data_nested
 ```
 
 ```{r}
+#View one of them to test
 aps1_data_nested |> 
   filter(Diagnosis == "card") |> 
   pull()
 ```
 
 ```{r}
-
+#Model of outcome of death based on aps1 for all diseases.
 aps1_data_nested <- aps1_data_nested |> 
     mutate(model_object = map(.x = data,
                               .f = ~glm(formula = death ~ aps1,                                         data = .x, 
@@ -92,7 +97,7 @@ aps1_data_nested
 ```
 
 ```{r}
-
+#View the one for card diagnosis
 aps1_data_nested |>   
   filter(Diagnosis == "card") |> 
     pull(model_object) |> 
@@ -104,6 +109,7 @@ aps1_data_nested |>
 We exclude the ortho diagnosis as we earlier in other analysis saw, it only had 3 data points, which is probaly also the reason why this model fails on this value.
 
 ```{r}
+#Summerizes the model
 aps1_data_nested <- aps1_data_nested |> 
   group_by(Diagnosis) |> 
   filter(Diagnosis != "ortho") |> 
@@ -115,6 +121,7 @@ aps1_data_nested
 ```
 
 ```{r}
+#Unnest the summerized values
 aps1_estimates <- aps1_data_nested |>  
                     unnest(cols = model_object_tidy)
 aps1_estimates
@@ -122,6 +129,7 @@ aps1_estimates
 ```
 
 ```{r}
+#Creates new dataframe with relevant columns for further analysis.
 aps1_estimates <- aps1_estimates |> 
                         select(c(term,
                                  Diagnosis, 
@@ -133,6 +141,7 @@ aps1_estimates
 ```
 
 ```{r}
+#Add significance determination value
 aps1_estimates <- aps1_estimates |>
                     
     mutate(q.value = map_dbl(.x=p.value,
@@ -148,6 +157,7 @@ aps1_estimates
 Plot of the model estimate aps1:
 
 ```{r}
+#Plots the model estimate aps1
 model_estimates <- aps1_estimates |>
   filter(term=='aps1') |> 
   ggplot(mapping = aes(x = estimate,
@@ -180,6 +190,7 @@ The higher the estimate , the higher the risk of dying is by each rise in the AP
 Plot of the model estimates intercept:
 
 ```{r}
+#Plots the model estimate of the intercept
 model_estimates_2 <- aps1_estimates |>
   filter(term=='(Intercept)') |> 
   ggplot(mapping = aes(x = estimate,
@@ -209,7 +220,7 @@ model_estimates_2
 Table with relevant model values for presentation.
 
 ```{r}
-
+#Table of relevant estimates
 intercepts<-aps1_estimates |>   
   filter(term == "(Intercept)") |> 
   select(Diagnosis, estimate, p.value) 
