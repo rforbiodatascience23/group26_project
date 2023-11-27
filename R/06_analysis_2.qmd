@@ -96,7 +96,7 @@ rhc_aug |>
                                "0" = "#619CFF"), 
                     labels = c("1" = "Yes", 
                                "0" = "No")) +
-  scale_color_manual(values = c("1" = "#F8766D",
+  scale_color_manual(values = c("1" = "#F8766D", 
                                 "0" = "#619CFF"), 
                      labels = c("1" = "Yes", 
                                 "0" = "No"))
@@ -117,17 +117,15 @@ rhc_aug |>
        y = "Mean blood pressure",
        color = "RHC status",
        fill = "RHC status") +
-  scale_color_manual(values = c("1" = "#619CFF", 
-                                "0" = "#F8766D"), 
-                     labels = c("1" = "Yes", 
-                                "0" = "No"))
+  scale_color_manual(values = c("1" = "#619CFF", "0" = "#F8766D"), 
+                     labels = c("1" = "Yes", "0" = "No"))
 ```
 
 In the plot below we take into account the split in data points we see underneath each violin plot. This is due to the data following a bimodal distribution which has to peaks rather than the normal distribution which has one peak. The reason why we have chosen the violin plot is to signify the bimodal distribution. 
 ```{r}
 #| label: meanbp-RHC-based-on-primary-disease
 meanbp_plot <- rhc_aug |> 
-    ggplot(aes(x = cat1, 
+  ggplot(aes(x = cat1, 
              y = meanbp1,
              fill = factor(swang1))) +
   geom_point(aes(color = cat1),
@@ -165,39 +163,50 @@ This plot shows all the diseases and how many people have it = 1 or dont have th
 subHX <- rhc_aug |> select(ends_with("hx"))
 
 subHX <- subHX |> pivot_longer(everything(),
-                      names_to = "variables",
-                      values_to = "values")
+                               names_to = "variables",
+                               values_to = "values")
 
 subHX |> mutate(values = factor(values)) |> 
-  ggplot(aes(x = variables, fill = values)) +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1)) +
-  geom_bar(position = "dodge")
+  ggplot(aes(x = variables, 
+             fill = values)) +
+  geom_bar(position = "dodge") +
+  theme(axis.text.x = element_text(angle = 20, 
+                                   hjust = 1))
 
 ```
 
 We begin by exploring if the number of comorbidity diseases influence the risk of death.
 ```{r}
 rhc_aug |>
-  ggplot(aes(x = comorbidities, fill=factor(death))) +
+  ggplot(aes(x = comorbidities, 
+             fill = factor(death))) +
   geom_bar(position = "stack") +
   labs(title = "Risk of dying by number of comorbidities",
        x = "Number of comorbidities",
        y = "Number of patients") +
-  scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  scale_fill_manual(name = "Death", 
+                    values = c("0" = "blue", 
+                               "1" = "red")) +
   theme_minimal()
 ```
 
 
 Now we want to include RHC treatment to see if this, together with comorbidities will influence the death rate. 
 ```{r}
-rhc_aug |> mutate(swang1 = factor(x = swang1, levels = c(0,1), c("no RHC","RHC"))) |> 
-  ggplot(aes(x = comorbidities, fill=factor(death))) +
+rhc_aug |> 
+  mutate(swang1 = factor(x = swang1, 
+                         levels = c(0,1), 
+                         c("no RHC","RHC"))) |> 
+  ggplot(aes(x = comorbidities, 
+             fill = factor(death))) +
   facet_wrap(~swang1)+
   geom_bar(position = "stack") +
   labs(title = "Risk of dying by number of comorbidities",
        x = "Number of comorbidities",
        y = "Number of patients") +
-  scale_fill_manual(name= "Survival", values = c("0" = "#619CFF", "1" = "#F8766D"), labels= c('Dead', 'Alive')) +
+  scale_fill_manual(name = "Survival", 
+                    values = c("0" = "#619CFF", "1" = "#F8766D"), 
+                    labels = c('Dead', 'Alive')) +
   theme_minimal()
 ```
 
@@ -205,28 +214,39 @@ rhc_aug |> mutate(swang1 = factor(x = swang1, levels = c(0,1), c("no RHC","RHC")
 This plot shows all individuals who survided and died with and without the RHC treatment. 
 ```{r}
 
-rhc_aug |> mutate(swang1 = factor(x = swang1, levels = c(0,1), c("no RHC","RHC")),
-                    death = factor(x = death, levels = c(0,1), c("alive","dead"))) |> 
-  count(death, swang1) |> 
-  ggplot(aes(x = swang1, y = n, fill = death))+
+rhc_aug |> 
+  mutate(swang1 = factor(x = swang1, 
+                         levels = c(0,1), 
+                         c("no RHC","RHC")),
+         death = factor(x = death, 
+                        levels = c(0,1), 
+                        c("alive","dead"))) |> 
+  count(death, 
+        swang1) |> 
+  ggplot(aes(x = swang1, 
+             y = n, 
+             fill = death))+
   geom_col(alpha = 1,
            color="pink") +
   labs(x = 'Treatment type',
        y = 'n') +
-  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+  theme(axis.text.x = element_text(angle = 20, 
+                                   hjust = 1))
 ```
 
 We investigate how many survive and die depending on their APS score. APS score predicts death by taking both laberatory values and patient signs into account. 
 ```{r}
 rhc_aug |> 
-  ggplot(aes(x = aps1, fill=factor(death))) +
+  ggplot(aes(x = aps1, 
+             fill = factor(death))) +
   geom_bar(position = "stack") 
   
 ```
 And then we make the x-axis an interval to bin the observations.
 ```{r}
 rhc_aug |> 
-  ggplot(aes(x = aps1_Interval, fill=factor(death))) +
+  ggplot(aes(x = aps1_Interval, 
+             fill=factor(death))) +
   geom_bar(position = "stack") 
 
 ```
