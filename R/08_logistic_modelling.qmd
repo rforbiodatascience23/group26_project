@@ -162,7 +162,7 @@ model_estimates <- aps1_estimates |>
   ) +
   labs(x='Estimates(95% CIs)', 
        y='Diseases',
-       title = 'The estimated rise in the risk of dying by increase in the APACHE score',
+       title = 'The APACHE scores contribution to the prediction of death',
        color = "Significant")
 
 ggsave(filename = "model_estimates.png",
@@ -175,7 +175,7 @@ ggsave(filename = "model_estimates.png",
 model_estimates
 ```
 
-The higher the estimate, the higher the risk of dying is by each rise in the APACHE score, the risk of dying increases with e\^estimate.
+The higher the estimate , the higher the risk of dying is by each rise in the APACHE score, the risk of dying increases with e\^estimate.
 
 ```{r}
 model_estimates_2 <- aps1_estimates |>
@@ -189,7 +189,7 @@ model_estimates_2 <- aps1_estimates |>
   geom_vline(xintercept = 0) +
   labs(x='Estimates(95% CIs)', 
        y='Diseases',
-       title = 'The estimated dying when the APACHE score is 0')
+       title = 'The estimate of the death outcome when the APACHE score is 0')
 
 ggsave(filename = "model_estimates_2.png",
        plot = model_estimates_2,
