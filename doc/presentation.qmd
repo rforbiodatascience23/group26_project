@@ -72,16 +72,12 @@ rhc_clean <- read_csv(file = "../data/rhc_clean.csv")
 ```{r}
 #| echo: true
 #| eval: true
-library(table1)
-library(kableExtra)
 
-T1 <- rhc_clean |> mutate(sex = factor(sex),
+rhc_clean |> mutate(sex = factor(sex),
                     swang1 = factor(swang1),
                     death = factor(x = death, levels = c(0,1), c("Alive","Dead"))) |> 
   table1(x = formula(~ sex + age + race + swang1 | death),
-         data = _) |> kable("html",table.attr = 'style="font-size: 17px;"') |> 
-   kable_styling(full_width = TRUE)
-T1
+         data = _)
 
 ```
 
@@ -110,6 +106,7 @@ T1
 <!--# SLIDE ---------------------------------------------------------------- -->
 <!--# ---------------------------------------------------------------------- -->
 ## Discussion
+
 
 <!--# ---------------------------------------------------------------------- -->
 <!--# SLIDE ---------------------------------------------------------------- -->
