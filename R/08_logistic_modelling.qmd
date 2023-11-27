@@ -167,13 +167,29 @@ model_estimates
 The higher the estimate, the higher the risk of dying is by each rise in the APACHE score, the risk of dying increases with e\^estimate.
 
 ```{r}
-aps1_estimates |> 
-  filter(is_significant == "yes") |> 
+
+intercepts<-aps1_estimates |>   
+  filter(term == "(Intercept)") |> 
+  select(Diagnosis, estimate) 
+
+coefficients<-aps1_estimates |>   
+  filter(term == "aps1") |> 
+  select(Diagnosis, estimate)
+
+model_variables<- 
+  inner_join(coefficients, intercepts, by = "Diagnosis")
+
+model_variables
+
+```
+
+```{r}
+rhc_aug |>
+  group_by(Diagnosis) |> 
+  ggplot(aes(x = aps1 , y =death ))+
+  facet_wrap(~Diagnosis)+
+  geom_smooth(method='glm', 
+              method.args = list(family = "binomial"), 
+              formula = y ~ 1/(1 + exp(-(estimate.y + estimate.x * x))))
   
-  ggplot(mapping = aes(x = aps1,
-                       y=1/(1 + exp(-(intercept+aps1*x))))) +
-  geom_point()+
-  geom_text_repel(aes(label=label))+
-  labs(x='Estimates', 
-       y='p-value')
 ```
