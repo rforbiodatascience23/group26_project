@@ -18,6 +18,8 @@ colnames(rhc_clean)
 ```{r}
 rhc_clean |> select(age, sex, edu, race, income)
 ```
+## Age
+
 ```{r}
 # Histogram of Age
 rhc_clean |>
@@ -30,6 +32,35 @@ rhc_clean |>
   theme_minimal()
 
 ```
+```{r}
+# Death in different ages
+rhc_clean |>
+  ggplot(aes(x = age, 
+             fill=factor(death))) +
+  geom_bar() +
+  labs(title = "Death in different ages",
+       x = "Age",
+       y = "Number of patients") +
+  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
+  theme_minimal()
+
+
+
+```
+
+```{r}
+## Percentage of DEATH by age
+rhc_clean |> 
+  group_by(age, death) |> 
+  summarize(count = n()) |> 
+  group_by(age) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(death == 1) |> 
+  select(age, percent)
+```
+
+## Gender
 
 ```{r}
 # Death females vs. males
@@ -44,6 +75,43 @@ rhc_clean |>
   theme_minimal()
 ```
 ```{r}
+## Percentage of DEATH by gender
+# rhc_clean |>
+#   ggplot(aes(x = sex, 
+#            fill = factor(death))) +
+#   geom_bar(position = "fill", 
+#            stat = "count") +
+#   labs(title = "Percentage of Death in Females vs. Males",
+#        x = "Gender",
+#        y = "Percentage of patients",
+#        fill = "Death Status") +
+#   scale_y_continuous(labels = scales::percent_format()) +
+#   theme_minimal()
+
+rhc_clean |> 
+  group_by(sex, death) |> 
+  summarize(count = n()) |> 
+  group_by(sex) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(death == 1) |> 
+  select(sex, percent)
+
+```
+## Race
+
+```{r}
+rhc_clean |> 
+  ggplot(aes(x = race, 
+             fill = as.factor(swang1))) +
+  geom_bar() +
+  labs(title = "Distribution of Race by RHC Status",
+       x = "Race",
+       y = "Count",
+       fill = "RHC Status")
+```
+
+```{r}
 rhc_clean |> 
   ggplot(aes(x = race, 
              fill=factor(death))) +
@@ -53,21 +121,19 @@ rhc_clean |>
        y = "Count",
        fill = "Death")
 ```
-
-
 ```{r}
-# Death in different ages
-rhc_clean |>
-  ggplot(aes(x = age, 
-             fill=factor(death))) +
-  geom_bar() +
-  labs(title = "Death in different ages",
-       x = "Age",
-       y = "Number of patients") +
-  #scale_fill_manual(name= "Death", values = c("0" = "blue", "1" = "red")) +
-  theme_minimal()
-
+## Percentage of DEATH by race
+rhc_clean |> 
+  group_by(race, death) |> 
+  summarize(count = n()) |> 
+  group_by(race) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(death == 1) |> 
+  select(race, percent)
 ```
+
+## Income
 
 ```{r}
 rhc_clean |> 
@@ -90,23 +156,20 @@ rhc_clean |>
        y = "Count",
        fill = "Death")
 ```
-
-
-
 ```{r}
+## Percentage of DEATH by income
 rhc_clean |> 
-  ggplot(aes(x = as.factor(sex), 
-             y = age, 
-             fill = as.factor(swang1))) +
-  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
-  labs(title = "Average Age by Sex and RHC",
-       x = "Sex",
-       y = "Average Age",
-       fill = "RHC Status")
-
-
+  group_by(income, death) |> 
+  summarize(count = n()) |> 
+  group_by(income) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(death == 1) |> 
+  select(income, percent)
 ```
 
+
+## Education
 ```{r}
 #'edu_group' based on the cut function
 rhc_clean$edu_group <- cut(rhc_clean$edu, 
@@ -133,18 +196,38 @@ rhc_clean |>
        fill = "RHC Status")
 
 ```
+```{r}
+## Percentage of DEATH by education
+rhc_clean |> 
+  group_by(edu_group, death) |> 
+  summarize(count = n()) |> 
+  group_by(edu_group) |> 
+  mutate(percent = count / sum(count) * 100) |> 
+  ungroup() |> 
+  filter(death == 1) |> 
+  select(edu_group, percent)
+```
+
+
+## Others
 
 
 ```{r}
 rhc_clean |> 
-  ggplot(aes(x = race, 
+  ggplot(aes(x = as.factor(sex), 
+             y = age, 
              fill = as.factor(swang1))) +
-  geom_bar() +
-  labs(title = "Distribution of Race by RHC Status",
-       x = "Race",
-       y = "Count",
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  labs(title = "Average Age by Sex and RHC",
+       x = "Sex",
+       y = "Average Age",
        fill = "RHC Status")
+
+
 ```
+
+
+
 
 ```{r}
 # Bar plot for Death by Race and RHC Status
