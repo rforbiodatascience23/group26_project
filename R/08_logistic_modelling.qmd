@@ -148,8 +148,8 @@ aps1_estimates <- aps1_estimates |>
                              .f = ~p.adjust(.x, 
                                             method = 'fdr'))) |> 
   
-    mutate(is_significant = case_when(q.value > 0.05 ~ 'no',
-                                      q.value <= 0.05 ~ 'yes'))
+    mutate(is_significant = case_when(q.value > 0.05 ~ 'No',
+                                      q.value <= 0.05 ~ 'Yes'))
 
 aps1_estimates
 ```
