@@ -56,14 +56,14 @@ quarto::quarto_render(input = "06_analysis_2.qmd",
                       output_format = "html",
                       output_file = "../results/06_analysis_2.html")
 ```
-## Analysis 3
+## PCA
 {{< include 07_PCA.qmd >}}
 ```{r}
 quarto::quarto_render(input = "07_PCA.qmd", 
                       output_format = "html",
                       output_file = "../results/07_PCA.html")
 ```
-## Analysis 4
+## Logistic Modelling
 {{< include 08_logistic_modelling.qmd >}}
 ```{r}
 quarto::quarto_render(input = "08_logistic_modelling.qmd", 
@@ -78,4 +78,3 @@ quarto::quarto_render(input = "99_functions.qmd",
                       output_file = "../results/99_functions.html")
 ```
 
-## Analysis 6
