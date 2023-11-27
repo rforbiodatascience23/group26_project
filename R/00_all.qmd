@@ -97,8 +97,6 @@ file.rename(from = "08_logistic_modelling.html",
 ## All
 ```{r}
 #| include: false
-quarto::quarto_render(input = "00_all.qmd",
-                      output_format = "html")
 
 file.rename(from = "00_all.html",
             to = "../results/00_all.html")
