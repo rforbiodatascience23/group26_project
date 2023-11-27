@@ -9,7 +9,7 @@ library(ggrepel)
 This file works with analysing the dataset using PCA.
 
 ```{r}
-rhc_clean
+rhc_aug
 ```
 
 ## PCA analysis
@@ -17,42 +17,42 @@ We change the swang1 variable to 1 if they had RHC performed and 0 if they did n
 Furthermore, we choose the variables we wanted to investigate. Then we used the command prcomp, which, admittedly is a bit of a black box function. It performs a principal component analysis on our data, and also standardizes the data.
 
 ```{r}
-rhc_clean_for_pca <- rhc_clean |>
+rhc_for_pca <- rhc_aug |>
   select(c(death,swang1,age,edu,meanbp1,resp1,hrt1,crea1,pot1,surv2md1)) |> 
-  mutate(death = case_when(
-                            death == 1 ~ "Dead",
-                            death == 0 ~ "Alive",
-                            )) |> 
-        mutate(swang1 = case_when(
-                            swang1 == "RHC" ~ 1,
-                            swang1 == "No RHC" ~ 0))
-rhc_clean_for_pca
+    mutate(swang1 = case_when(
+         death == 0 ~ "Alive",
+         death == 1 ~ "Dead"))
+rhc_for_pca
 
-pca_fit <- rhc_clean_for_pca |> 
+pca_fit <- rhc_for_pca |> 
   select(!death) |> 
   prcomp(scale = TRUE)
-  
 
-#Things to change:
-#death, swang1,age,edu,cardiohx,chfhx,dementhx,renalhx,meanbp1,resp1,hrt1,crea1,pot1
+pca_fit
 
 ```
 
 
-
+I plot the coordinates of the first and second PCs, as well as the result of the different observations.
 ```{r}
-pca_fit |> 
-  augment(rhc_clean_for_pca) |> # add original dataset back in
+rhc_for_pca
+coordinates <- pca_fit |> 
+  augment(rhc_for_pca) |> # add original dataset back in
   ggplot(aes(.fittedPC1, .fittedPC2,color = death)) + 
-  geom_point(size = 1.5)+
+  geom_point(size = 1.5) +
   scale_color_manual(
     values = c(Dead = "red", Alive = "green")
   )
+coordinates
+
+ggsave("../results/result_plotted_on_coordinates.png", coordinates)
 
 
 ```
 
 
+The Eigenvalues are investigated, as well as how much of the variance each of the PCs explain.
+Then explanation of each PC is plotted as well as the accumulated explanation.
 ```{r}
 pca_fit |> 
   tidy(matrix = "eigenvalues")
@@ -71,7 +71,7 @@ pca_fit |>
   select(cumulative) |> 
   sum()
 
-pca_fit |>
+p1 <- pca_fit |>
   tidy(matrix = "eigenvalues") |> 
   ggplot(aes(PC, percent)) +
   geom_col(fill = "darkolivegreen2", alpha = 0.8) +
@@ -87,17 +87,20 @@ pca_fit |>
   ) +
   annotate("text", label = "PCs needed : 7", x = 7, y = 0.125, color = "darkred")
 
-
+ggsave("../results/PCA_explained.png", p1)
 
 
 ```
 
+
+I take a look at the rotation matrix
 ```{r}
 pca_fit |> 
   tidy(matrix = "rotation")
 
 ```
 
+The influence of each variable on the first and second PC is plotted.
 ```{r}
 arrow_style <- arrow(
   angle = 20, ends = "first", type = "closed", length = grid::unit(8, "pt")
@@ -119,15 +122,7 @@ pca_fit |>
 
 ```
 
-```{r}
-pca_fit |> 
-  tidy(matrix = "eigenvalues")
-```
-
-
-
-
-
+A look at how many people got RHC for each disease is taken
 ```{r}
 
 rhc_clean |> 
@@ -140,6 +135,7 @@ rhc_clean |>
 
 ```
 
+We want to explore how many people died with and without having RHC performed.
 ```{r}
 rhc_clean |> 
   mutate(death = case_when(
@@ -156,6 +152,7 @@ rhc_clean |>
 
 ```
 
+We investigate a possible way to make a table 1
 ```{r}
 library("table1") # <= Yes, this should normally go at the beginning!
 rhc_clean |>
@@ -172,6 +169,8 @@ rhc_clean |>
   
 ```
 
+
+Here we see how well the attribute surv2md1 predict whether people are dead after 2 months using a linearmodel.
 ```{r}
 
 model = rhc_clean |> 
@@ -181,19 +180,8 @@ model
 
 ```
 
-```{r}
-rhc_clean |> 
-  mutate(swang1 = case_when(
-                            swang1 == "RHC" ~ 1,
-                            swang1 == "No RHC" ~ 0)) |>
-  group_by(death) |> 
-  summarise(mean(aps1),mean(swang1))
-
-model |> summary()
-
-
-
-```
+We now look into seeing how well each attribute precicts whether the patient dies within 2 months.
+First Swang ismutated, and the proper values are choosen
 
 ```{r}
 rhc_clean_long <- rhc_clean |> 
@@ -206,8 +194,6 @@ rhc_clean_long <- rhc_clean |>
     pivot_longer(cols = !death,
                 names_to = "attribute",
                 values_to = "value")
-view(rhc_clean_long)
-
 
 ```
 
