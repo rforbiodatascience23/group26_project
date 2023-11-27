@@ -6,38 +6,30 @@ library(purrr)
 library(ggrepel)
 ```
 
-How many people had cancer?
-
-# https://ehsanx.github.io/TMLEworkshop/rhc-data-description.html
-
-Overvej at factorisere alt
-
-```{r}
-
-
-
-```
+This file works with analysing the dataset using PCA.
 
 ```{r}
 rhc_clean
-
-
-
 ```
 
 ## PCA analysis
+We change the swang1 variable to 1 if they had RHC performed and 0 if they did not.
+Furthermore, we choose the variables we wanted to investigate. Then we used the command prcomp, which, admittedly is a bit of a black box function. It performs a principal component analysis on our data, and also standardizes the data.
 
 ```{r}
-rhc_clean
-
-rhc_for_pca <- rhc_clean |>
-  mutate(swang1 = case_when(
+rhc_clean_for_pca <- rhc_clean |>
+  select(c(death,swang1,age,edu,meanbp1,resp1,hrt1,crea1,pot1,surv2md1)) |> 
+  mutate(death = case_when(
+                            death == 1 ~ "Dead",
+                            death == 0 ~ "Alive",
+                            )) |> 
+        mutate(swang1 = case_when(
                             swang1 == "RHC" ~ 1,
-                            swang1 == "No RHC" ~ 0)) |> 
-  select_if(is.numeric) |> 
-  select(c(death, swang1,age,edu,meanbp1,resp1,hrt1,crea1,pot1,surv2md1))
+                            swang1 == "No RHC" ~ 0))
+rhc_clean_for_pca
 
-pca_fit <- rhc_for_pca |>
+pca_fit <- rhc_clean_for_pca |> 
+  select(!death) |> 
   prcomp(scale = TRUE)
   
 
@@ -46,34 +38,62 @@ pca_fit <- rhc_for_pca |>
 
 ```
 
-```{r}
 
+
+```{r}
 pca_fit |> 
-  augment(rhc_for_pca) %>% # add original dataset back in
+  augment(rhc_clean_for_pca) |> # add original dataset back in
   ggplot(aes(.fittedPC1, .fittedPC2,color = death)) + 
-  geom_point(size = 1.5)
+  geom_point(size = 1.5)+
+  scale_color_manual(
+    values = c(Dead = "red", Alive = "green")
+  )
 
 
 ```
 
+
 ```{r}
-pca_fit %>%
+pca_fit |> 
+  tidy(matrix = "eigenvalues")
+
+pca_fit |> 
   tidy(matrix = "eigenvalues")
 
 
-pca_fit %>%
-  tidy(matrix = "eigenvalues") %>%
+1.2996592 / (1.2996592 + 1.1554729 +1.1024399 +1.0453468+ 0.9791764+ 0.8827722+ 0.8353270 +0.8135874 +0.7549012)
+
+
+transformation_coefficient <-  1/0.18768
+transformation_coefficient
+pca_fit |> 
+  tidy(matrix = "eigenvalues") |> 
+  select(cumulative) |> 
+  sum()
+
+pca_fit |>
+  tidy(matrix = "eigenvalues") |> 
   ggplot(aes(PC, percent)) +
-  geom_col(fill = "#56B4E9", alpha = 0.8) +
+  geom_col(fill = "darkolivegreen2", alpha = 0.8) +
+  geom_line(aes(y = cumulative / transformation_coefficient), color = "darkgoldenrod1") +
+  geom_point(aes(y = cumulative / transformation_coefficient), color = "darkgoldenrod1") +
+  geom_hline(aes(yintercept = 0.8 / transformation_coefficient),linetype = 2, color = "red") +
   scale_x_continuous(breaks = 1:9) +
   scale_y_continuous(
     labels = scales::percent_format(),
-    expand = expansion(mult = c(0, 0.01))
-  )
+    expand = expansion(mult = c(0, 0.01)),
+    sec.axis = sec_axis(trans =~.*transformation_coefficient, name = "Cumulative",
+                        labels = scales::percent_format())
+  ) +
+  annotate("text", label = "PCs needed : 7", x = 7, y = 0.125, color = "darkred")
+
+
+
+
 ```
 
 ```{r}
-pca_fit %>%
+pca_fit |> 
   tidy(matrix = "rotation")
 
 ```
@@ -84,9 +104,9 @@ arrow_style <- arrow(
 )
 
 # plot rotation matrix
-pca_fit %>%
-  tidy(matrix = "rotation") %>%
-  pivot_wider(names_from = "PC", names_prefix = "PC", values_from = "value") %>%
+pca_fit |> 
+  tidy(matrix = "rotation") |> 
+  pivot_wider(names_from = "PC", names_prefix = "PC", values_from = "value") |> 
   ggplot(aes(PC1, PC2)) +
   geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
   geom_text(
@@ -100,13 +120,13 @@ pca_fit %>%
 ```
 
 ```{r}
-pca_fit %>%
+pca_fit |> 
   tidy(matrix = "eigenvalues")
 ```
 
-```{r}
-rhc_clean
-```
+
+
+
 
 ```{r}
 
@@ -134,10 +154,6 @@ rhc_clean |>
        y = "Counts",
        legend.title = element_text(colour = "steelblue"))
 
-```
-
-```{r}
-rhc_clean
 ```
 
 ```{r}
@@ -208,7 +224,7 @@ rhc_clean_long_nested
 rhc_clean_long_nested <- rhc_clean_long_nested |> 
   group_by(attribute) |>
   mutate(model_object = map(.x = data,
-      .f = ~lm(formula = value ~ death,
+      .f = ~lm(formula = death ~ value,
                data = .x)))
 ```
 
@@ -271,20 +287,4 @@ rhc_estimates |>
   theme_minimal() +
   labs(title = "Genes Associated with Early Metastasis in Small Node-Negative Breast Carcinoma",
      x = "Estimates (95%CIs)",y = "", caption = "data from ...")
-```
-
-```{r}
-
-2+2
-
-
-```
-
-```{r}
-2+2
-
-```
-
-```{r}
-2+2
 ```
